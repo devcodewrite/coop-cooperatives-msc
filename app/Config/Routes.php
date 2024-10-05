@@ -7,5 +7,5 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
-$routes->post('sync/pullChanges', 'SyncController::pullChanges');
-$routes->post('sync/pushChanges', 'SyncController::pushChanges');
+$routes->post('sync/pull', 'SyncController::pull');
+$routes->post('sync/push', 'SyncController::push');
