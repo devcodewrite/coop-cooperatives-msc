@@ -112,24 +112,19 @@ class RegionController extends ResourceController
     // Pull changes from the server
     public function pull()
     {
-        $lastPulledAt = $this->request->getGet('lastPulledAt');
+        $lastSyncTime = $this->request->getGet('lastSyncTime');
 
         // Fetch updated after the last pulled timestamp
         $records = $this->model
-            ->where('updated_at >', date('Y-m-d H:i:s', strtotime($lastPulledAt)))
+            ->where('updated_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->findAll();
         $deletedRecords = $this->model->select(['id', 'deleted_at'])
-            ->where('deleted_at >', date('Y-m-d H:i:s', strtotime($lastPulledAt)))
+            ->where('deleted_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->onlyDeleted()->findAll();
-        $changes = [
-            'members' => [
-                'updated' => $records,
-                'deleted' => $deletedRecords,
-            ],
-        ];
 
         return $this->respond([
-            'changes' => $changes,
+            'updated' => $records,
+            'deleted' => $deletedRecords,
             'timestamp' =>  date('Y-m-d H:i:s', strtotime('now')) // Current server time for synchronization
         ]);
     }
