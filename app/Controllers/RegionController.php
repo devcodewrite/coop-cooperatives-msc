@@ -26,7 +26,7 @@ class RegionController extends ResourceController
 
     public function create()
     {
-        $data = $this->request->getPost();
+        $data = $this->request->getVar();
 
         $rules = config('Validation')->create['regions'];
         // Validate input
@@ -38,8 +38,19 @@ class RegionController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $this->model->save($data);
-        return $this->respondCreated(['status' => 'Region created successfully.']);
+        if ($this->model->save($data)) {
+            return $this->respondCreated([
+                'status' => true,
+                'data' => $data,
+                'message' => 'Region created successfully.'
+            ]);
+        } else {
+            return $this->respond([
+                'status' => true,
+                'data' => $data,
+                'message' => 'Failed to create region.'
+            ], Response::HTTP_EXPECTATION_FAILED);
+        }
     }
 
     public function update($id = null)
