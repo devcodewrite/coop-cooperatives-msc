@@ -55,7 +55,7 @@ class RegionController extends ResourceController
 
     public function update($id = null)
     {
-        $data = $this->request->getRawInput();
+        $data = $this->request->getJSON();
 
         $rules = config('Validation')->update['regions'];
         // Validate input
