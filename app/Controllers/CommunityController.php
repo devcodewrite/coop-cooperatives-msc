@@ -36,8 +36,20 @@ class CommunityController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
-        $this->model->save($data);
-        return $this->respondCreated(['status' => 'Community created successfully.']);
+
+        if ($this->model->save($data)) {
+            return $this->respondCreated([
+                'status' => true,
+                'data' => $this->model->find($this->model->getInsertID()),
+                'message' => 'Community created successfully.'
+            ]);
+        } else {
+            return $this->respond([
+                'status' => false,
+                'data' => $data,
+                'message' => 'Failed to create community.'
+            ], Response::HTTP_EXPECTATION_FAILED);
+        }
     }
 
     public function update($id = null)

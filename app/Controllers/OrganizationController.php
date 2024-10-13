@@ -25,7 +25,7 @@ class OrganizationController extends ResourceController
 
     public function create()
     {
-        $data = $this->request->getPost();
+        $data = $this->request->getJSON();
         $rules = config('Validation')->create['organizations'];
         // Validate input
         if (!$this->validate($rules)) {
@@ -35,8 +35,20 @@ class OrganizationController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
-        $this->model->save($data);
-        return $this->respondCreated(['status' => 'Organization created successfully.']);
+
+        if ($this->model->save($data)) {
+            return $this->respondCreated([
+                'status' => true,
+                'data' => $this->model->find($this->model->getInsertID()),
+                'message' => 'Organization created successfully.'
+            ]);
+        } else {
+            return $this->respond([
+                'status' => false,
+                'data' => $data,
+                'message' => 'Failed to create organization.'
+            ], Response::HTTP_EXPECTATION_FAILED);
+        }
     }
 
     public function update($id = null)

@@ -41,12 +41,12 @@ class RegionController extends ResourceController
         if ($this->model->save($data)) {
             return $this->respondCreated([
                 'status' => true,
-                'data' => $data,
+                'data' => $this->model->find($this->model->getInsertID()),
                 'message' => 'Region created successfully.'
             ]);
         } else {
             return $this->respond([
-                'status' => true,
+                'status' => false,
                 'data' => $data,
                 'message' => 'Failed to create region.'
             ], Response::HTTP_EXPECTATION_FAILED);

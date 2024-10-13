@@ -37,8 +37,19 @@ class OfficeController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $this->model->save($data);
-        return $this->respondCreated(['status' => 'Office created successfully.']);
+        if ($this->model->save($data)) {
+            return $this->respondCreated([
+                'status' => true,
+                'data' => $this->model->find($this->model->getInsertID()),
+                'message' => 'Office created successfully.'
+            ]);
+        } else {
+            return $this->respond([
+                'status' => false,
+                'data' => $data,
+                'message' => 'Failed to create office.'
+            ], Response::HTTP_EXPECTATION_FAILED);
+        }
     }
 
     public function update($id = null)

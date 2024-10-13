@@ -36,8 +36,19 @@ class DistrictController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $this->model->save($data);
-        return $this->respondCreated(['status' => 'District created successfully.']);
+        if ($this->model->save($data)) {
+            return $this->respondCreated([
+                'status' => true,
+                'data' => $this->model->find($this->model->getInsertID()),
+                'message' => 'District created successfully.'
+            ]);
+        } else {
+            return $this->respond([
+                'status' => false,
+                'data' => $data,
+                'message' => 'Failed to create district.'
+            ], Response::HTTP_EXPECTATION_FAILED);
+        }
     }
 
     public function update($id = null)

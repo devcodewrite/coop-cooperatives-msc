@@ -36,15 +36,18 @@ class AccountController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
+
         if ($this->model->save($data)) {
             return $this->respondCreated([
-                'status'  => false,
-                'message' => 'Account created successfully.',
+                'status' => true,
+                'data' => $this->model->find($this->model->getInsertID()),
+                'message' => 'Account created successfully.'
             ]);
         } else {
             return $this->respond([
-                'status'  => false,
-                'message' => 'Failed to create account.',
+                'status' => false,
+                'data' => $data,
+                'message' => 'Failed to create account.'
             ], Response::HTTP_EXPECTATION_FAILED);
         }
     }
