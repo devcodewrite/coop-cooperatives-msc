@@ -36,6 +36,8 @@ class OrganizationController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        $data['orgid'] = $this->model->generateId();
+
         if ($this->model->save($data)) {
             return $this->respondCreated([
                 'status' => true,

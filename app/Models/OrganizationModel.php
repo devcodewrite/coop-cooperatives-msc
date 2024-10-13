@@ -51,4 +51,9 @@ class OrganizationModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function generateId(): string
+    {
+        return "ER_001";
+    }
 }
