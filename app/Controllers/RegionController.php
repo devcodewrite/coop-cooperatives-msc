@@ -72,7 +72,11 @@ class RegionController extends ResourceController
         }
 
         $this->model->update($id, $data);
-        return $this->respond(['status' => 'Region updated successfully.']);
+        return $this->respond([
+            'status' => true,
+            'data' => $this->model->find($id),
+            'message' => 'Region updated successfully.'
+        ]);
     }
 
     public function show($id = null)
