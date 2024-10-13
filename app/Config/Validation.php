@@ -128,4 +128,9 @@ class Validation extends BaseConfig
         ]
         // Other validation rules similar to 'create', with only required fields removed
     ];
+
+    public $sync = [
+        'updated' => 'required|valid_json',
+        'deleted' => 'required|valid_json',
+    ];
 }

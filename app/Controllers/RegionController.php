@@ -132,26 +132,31 @@ class RegionController extends ResourceController
     // Push changes to the server
     public function push()
     {
-        $changes = $this->request->getPost('changes');
-
-        if (isset($changes['members']['updated'])) {
-            foreach ($changes['members']['updated'] as $member) {
-                $this->model->save([
-                    'id'      => $member['id'],
-                    'name'    => $member['name'],
-                    'email'   => $member['email'],
-                    'version' => $member['version'],
-                    'updated_at' => date('Y-m-d H:i:s', $member['updated_at']),
-                ]);
-            }
+        $rules = config('Validation')->sync;
+        // Validate input
+        if (!$this->validate($rules)) {
+            return $this->respond([
+                'status'  => false,
+                'message' => 'Failed validating data',
+                'error'   => $this->validator->getErrors()
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        if (isset($changes['members']['deleted'])) {
-            foreach ($changes['members']['deleted'] as $deletedMember) {
-                $this->model->update($deletedMember['id'], ['deleted_at' => date('Y-m-d H:i:s', $deletedMember['deleted_at'])]);
-            }
-        }
+        $updates = $this->request->getVar('updated');
+        $deleted = $this->request->getVar('deleted');
+        $nrows = sizeof($updates);
+    
+        if ($nrows > 0)
+            $this->model->builder()->updateBatch($updates, ['id'], sizeof($updates));
 
-        return $this->respond(['status' => 'success']);
+        $this->model->delete(
+            array_map(function ($item) {
+                return $item->id;
+            }, $deleted)
+        );
+        return $this->respond([
+            'status' => true,
+            'message' => 'Sync completed successfully'
+        ], Response::HTTP_OK);
     }
 }

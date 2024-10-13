@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 
 $routes->get('regions/sync-pull', "RegionController::pull");
+$routes->post('regions/sync-push', "RegionController::push");
 
 $routes->resource('districts', ['controller' => 'DistrictController']);
 $routes->resource('regions', ['controller' => 'RegionController']);
