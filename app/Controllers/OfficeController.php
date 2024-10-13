@@ -25,7 +25,7 @@ class OfficeController extends ResourceController
 
     public function create()
     {
-        $data = $this->request->getPost();
+        $data = $this->request->getVar();
 
         $rules = config('Validation')->create['offices'];
         // Validate input
