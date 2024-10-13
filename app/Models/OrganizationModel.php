@@ -14,8 +14,6 @@ class OrganizationModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
-        'type',
-        'creator',
         'owner',
         'deleted_at',
         'updated_at',

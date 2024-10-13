@@ -14,12 +14,10 @@ class OrganizationController extends ResourceController
 
     public function index()
     {
-
         $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
         $allowedColumns = [];
 
         $response = new ApiResponse($this->model, $params, $allowedColumns);
-
         return $response->getCollectionResponse();
     }
 
