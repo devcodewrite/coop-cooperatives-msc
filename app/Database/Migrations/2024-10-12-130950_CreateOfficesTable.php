@@ -62,6 +62,7 @@ class CreateOfficesTable extends Migration
         $this->forge->addForeignKey('region_id', 'regions', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('district_id', 'districts', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('orgid', 'organizations', 'orgid', 'CASCADE', 'CASCADE');
+        $this->forge->addKey(['creator','owner']);
         $this->forge->createTable('offices');
     }
 

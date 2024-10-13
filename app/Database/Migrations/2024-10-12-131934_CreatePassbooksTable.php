@@ -62,6 +62,10 @@ class CreatePassbooksTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->createTable('passbooks');
+        $this->forge->addForeignKey('acnum', 'accounts', 'acnum', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('assoc_code', 'associations', 'assoc_code', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('orgid', 'organizations', 'orgid', 'CASCADE', 'CASCADE');
+        $this->forge->addKey(['creator','owner','pbnum','assoc_code']);
     }
 
     public function down()

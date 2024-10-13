@@ -67,11 +67,18 @@ class OfficeController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
         if (!$this->model->find($id)) {
-            return $this->failNotFound('Office not found');
+            return $this->respond([
+                'status' => false,
+                'message' => 'Office not found'
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $this->model->update($id, $data);
-        return $this->respond(['status' => 'Office updated successfully.']);
+        return $this->respond([
+            'status' => true,
+            'data' => $this->model->find($id),
+            'message' => 'Office updated successfully.'
+        ]);
     }
 
     public function show($id = null)

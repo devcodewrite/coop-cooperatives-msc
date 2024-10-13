@@ -62,6 +62,7 @@ class CreateAssociationsTable extends Migration
         $this->forge->addForeignKey('community_id', 'communities', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('office_id', 'offices', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('orgid', 'organizations', 'orgid', 'CASCADE', 'CASCADE');
+        $this->forge->addKey(['creator','owner', 'assoc_code']);
         $this->forge->createTable('associations');
     }
 

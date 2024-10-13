@@ -39,6 +39,10 @@ class CreateCommunitiesTable extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '10',
             ],
+            'creator' => [
+                'type' => 'VARCHAR',
+                'constraint' => '40',
+            ],
             'owner' => [
                 'type' => 'VARCHAR',
                 'constraint' => '40',
@@ -63,6 +67,7 @@ class CreateCommunitiesTable extends Migration
         $this->forge->addForeignKey('region_id', 'regions', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('district_id', 'districts', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('orgid', 'organizations', 'orgid', 'CASCADE', 'CASCADE');
+        $this->forge->addKey(['creator','owner']);
         $this->forge->createTable('communities');
     }
 

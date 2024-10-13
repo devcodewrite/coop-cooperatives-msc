@@ -13,6 +13,14 @@ $routes->get('districts/sync-pull', "DistrictController::pull");
 $routes->post('districts/sync-push', "DistrictController::push");
 $routes->get('offices/sync-pull', "OfficeController::pull");
 $routes->post('offices/sync-push', "OfficeController::push");
+$routes->get('communities/sync-pull', "CommunityController::pull");
+$routes->post('communities/sync-push', "CommunityController::push");
+$routes->get('associations/sync-pull', "AssociationController::pull");
+$routes->post('associations/sync-push', "AssociationController::push");
+$routes->get('passbooks/sync-pull', "PassbookController::pull");
+$routes->post('passbooks/sync-push', "PassbookController::push");
+$routes->get('accounts/sync-pull', "AccountController::pull");
+$routes->post('accounts/sync-push', "AccountController::push");
 
 $routes->resource('districts', ['controller' => 'DistrictController']);
 $routes->resource('regions', ['controller' => 'RegionController']);

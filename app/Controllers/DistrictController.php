@@ -65,11 +65,18 @@ class DistrictController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
         if (!$this->model->find($id)) {
-            return $this->failNotFound('District not found');
+            return $this->respond([
+                'status' => false,
+                'message' => 'District not found'
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $this->model->update($id, $data);
-        return $this->respond(['status' => 'District updated successfully.']);
+        return $this->respond([
+            'status' => true,
+            'data' => $this->model->find($id),
+            'message' => 'District updated successfully.'
+        ]);
     }
 
     public function show($id = null)

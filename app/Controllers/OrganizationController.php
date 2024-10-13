@@ -66,11 +66,18 @@ class OrganizationController extends ResourceController
         }
 
         if (!$this->model->find($id)) {
-            return $this->failNotFound('Organization not found');
+            return $this->respond([
+                'status' => false,
+                'message' => 'Organization not found'
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $this->model->update($id, $data);
-        return $this->respond(['status' => 'Organization updated successfully.']);
+        return $this->respond([
+            'status' => true,
+            'data' => $this->model->find($id),
+            'message' => 'Organization updated successfully.'
+        ]);
     }
 
     public function show($id = null)

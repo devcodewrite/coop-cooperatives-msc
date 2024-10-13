@@ -116,6 +116,7 @@ class CreateAccountsTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->createTable('accounts');
+        $this->forge->addKey(['creator','owner','acnum']);
     }
 
     public function down()

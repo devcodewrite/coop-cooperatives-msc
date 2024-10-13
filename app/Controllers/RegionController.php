@@ -68,7 +68,10 @@ class RegionController extends ResourceController
         }
 
         if (!$this->model->find($id)) {
-            return $this->failNotFound('Region not found');
+            return $this->respond([
+                'status' => false,
+                'message' => 'Region not found'
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $this->model->update($id, $data);
