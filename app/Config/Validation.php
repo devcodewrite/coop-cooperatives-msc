@@ -130,7 +130,7 @@ class Validation extends BaseConfig
     ];
 
     public $sync = [
-        'updated' => 'required|valid_json',
-        'deleted' => 'required|valid_json',
+        'updated' => 'required',
+        'deleted' => 'required',
     ];
 }
