@@ -143,17 +143,15 @@ class RegionController extends ResourceController
         }
 
         $updates = $this->request->getVar('updated');
+        $nrowsUpdated = sizeof($updates);
         $deleted = $this->request->getVar('deleted');
-        $nrows = sizeof($updates);
-    
-        if ($nrows > 0)
-            $this->model->builder()->updateBatch($updates, ['id'], sizeof($updates));
+        $nrowsDeleted = sizeof($updates);
 
-        $this->model->delete(
-            array_map(function ($item) {
-                return $item->id;
-            }, $deleted)
-        );
+        if ($nrowsUpdated > 0)
+            $this->model->builder()->updateBatch($updates, ['id'], sizeof($updates));
+        if ($nrowsDeleted > 0)
+            $this->model->builder()->updateBatch($deleted, ['id'], sizeof($deleted));
+
         return $this->respond([
             'status' => true,
             'message' => 'Sync completed successfully'
