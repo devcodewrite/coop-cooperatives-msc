@@ -25,7 +25,7 @@ class OrganizationController extends ResourceController
 
     public function create()
     {
-        $data = $this->request->getJSON();
+        $data = $this->request->getVar();
         $rules = config('Validation')->create['organizations'];
         // Validate input
         if (!$this->validate($rules)) {
