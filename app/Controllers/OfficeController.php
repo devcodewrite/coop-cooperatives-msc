@@ -37,7 +37,7 @@ class OfficeController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
         $data = (array) $data;
-        $data['off_code'] = $data['off_code'] ?? $this->model->genereateCode($data['orgid']);
+        $data['off_code'] = $data['off_code'] ?? $this->model->generateCode($data['orgid']);
 
         if ($this->model->save($data)) {
             return $this->respondCreated([
