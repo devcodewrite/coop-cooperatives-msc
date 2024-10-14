@@ -19,6 +19,14 @@ class CreateDistrictsTable extends Migration
                 'type' => 'VARCHAR',
                 'constraint' => '45',
             ],
+            'capital' => [
+                'type' => 'VARCHAR',
+                'constraint' => '45',
+            ],
+            'category' => [
+                'type' => 'ENUM',
+                'constraint' => ['Municipal', 'District'],
+            ],
             'region_id' => [
                 'type' => 'INT',
                 'unsigned' => true,
@@ -34,12 +42,13 @@ class CreateDistrictsTable extends Migration
             ],
             'created_at' => [
                 'type' => 'TIMESTAMP',
-                 'default' => new RawSql('CURRENT_TIMESTAMP'),
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
             ],
         ]);
 
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('region_id', 'regions', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey(['category']);
         $this->forge->createTable('districts');
     }
 
