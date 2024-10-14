@@ -15,20 +15,28 @@ class CreatePassbooksTable extends Migration
                 'auto_increment' => true,
                 'unsigned' => true,
             ],
+            'account_id' => [
+                'type' => 'INT',
+                'unsigned' => true,
+            ],
+            'association_id' => [
+                'type' => 'INT',
+                'unsigned' => true,
+            ],
             'pbnum' => [
                 'type' => 'VARCHAR',
                 'constraint' => '10',
-                'null' => true,
+                'null' => false,
             ],
             'acnum' => [
                 'type' => 'VARCHAR',
                 'constraint' => '10',
-                'null' => true,
+                'null' => false,
             ],
             'assoc_code' => [
                 'type' => 'VARCHAR',
                 'constraint' => '10',
-                'null' => true,
+                'null' => false,
             ],
             'orgid' => [
                 'type' => 'VARCHAR',
@@ -56,16 +64,15 @@ class CreatePassbooksTable extends Migration
             ],
             'created_at' => [
                 'type' => 'TIMESTAMP',
-                 'default' => new RawSql('CURRENT_TIMESTAMP'),
+                'default' => new RawSql('CURRENT_TIMESTAMP'),
             ],
         ]);
 
         $this->forge->addKey('id', true);
         $this->forge->createTable('passbooks');
-        $this->forge->addForeignKey('acnum', 'accounts', 'acnum', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('assoc_code', 'associations', 'assoc_code', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('orgid', 'organizations', 'orgid', 'CASCADE', 'CASCADE');
-        $this->forge->addKey(['creator','owner','pbnum','assoc_code']);
+        $this->forge->addForeignKey('account_id', 'accounts', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('association_id', 'associations', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addKey(['creator', 'owner', 'orgid', 'pbnum', 'assoc_code']);
     }
 
     public function down()
