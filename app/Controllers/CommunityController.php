@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\CommunityModel;
+use App\Models\OrganizationModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
@@ -25,7 +26,7 @@ class CommunityController extends ResourceController
 
     public function create()
     {
-        $data = $this->request->getPost();
+        $data = (array)$this->request->getVar();
 
         $rules = config('Validation')->create['communities'];
         // Validate input
@@ -34,6 +35,15 @@ class CommunityController extends ResourceController
                 'status'  => false,
                 'message' => 'Failed validating data',
                 'error'   => $this->validator->getErrors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+        $orgModel = new OrganizationModel();
+
+        if (!$orgModel->find($data['orgid'])) {
+            return $this->respond([
+                'status'  => false,
+                'message' => 'Failed validating data',
+                'error'   =>    ["orgid" => "The Organization doesn't exist."]
             ], Response::HTTP_BAD_REQUEST);
         }
 

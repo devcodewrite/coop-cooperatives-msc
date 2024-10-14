@@ -58,7 +58,7 @@ class Validation extends BaseConfig
             'name' => 'required|max_length[40]',
             'region_id' => 'required|integer',
             'district_id' => 'required|integer',
-            'orgid' => 'required|max_length[10]',
+            'orgid' => 'required|max_length[10]|',
         ],
         'communities' => [
             'name' => 'required|max_length[40]',
