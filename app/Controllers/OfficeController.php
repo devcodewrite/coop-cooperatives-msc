@@ -26,7 +26,7 @@ class OfficeController extends ResourceController
 
     public function create()
     {
-        $data = $this->request->getVar();
+        $data = (array)$this->request->getVar();
 
         $rules = config('Validation')->create['offices'];
         // Validate input
@@ -47,7 +47,6 @@ class OfficeController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $data = (array) $data;
         $data['off_code'] = $data['off_code'] ?? $this->model->generateCode($data['orgid']);
 
         if ($this->model->save($data)) {
