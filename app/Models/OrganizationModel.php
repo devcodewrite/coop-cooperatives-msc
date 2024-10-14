@@ -50,8 +50,8 @@ class OrganizationModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function generateId(): string
+    public function generateId($name): string
     {
-        return "ER_001";
+        return substr(strtoupper($name), 0, 3) . str_pad(random_int(0, 9999), 4, STR_PAD_LEFT);
     }
 }

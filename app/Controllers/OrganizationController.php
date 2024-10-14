@@ -14,6 +14,11 @@ class OrganizationController extends ResourceController
 
     public function index()
     {
+        $response = auth()->can('view', 'organizations');
+        if ($response->denied())
+            return $response->responsed();
+        auth()->applyConditionsToModel($this->model, 'users');
+
         $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
         $allowedColumns = [];
 
@@ -23,7 +28,7 @@ class OrganizationController extends ResourceController
 
     public function create()
     {
-        $data = $this->request->getVar();
+        $data = (array)$this->request->getVar();
         $rules = config('Validation')->create['organizations'];
         // Validate input
         if (!$this->validate($rules)) {
@@ -33,8 +38,7 @@ class OrganizationController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
-
-        $data = array_merge((array)$data, ['orgid' => $this->model->generateId()]);
+        $data['orgid'] = $this->model->generateId($data['name']);
 
         if ($this->model->save($data)) {
             return $this->respondCreated([
@@ -82,6 +86,11 @@ class OrganizationController extends ResourceController
 
     public function show($id = null)
     {
+        $response = auth()->can('view', 'organizations');
+        if ($response->denied())
+            return $response->responsed();
+        auth()->applyConditionsToModel($this->model, 'users', ['orgid' => $id]);
+
         $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
         $allowedColumns = [];
         $this->model->find($id);
