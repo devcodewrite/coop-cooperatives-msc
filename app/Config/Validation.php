@@ -53,6 +53,7 @@ class Validation extends BaseConfig
         ],
         'organizations' => [
             'name' => 'required|max_length[40]',
+            'owner' => 'required|min_length[3]'
         ],
         'offices' => [
             'name' => 'required|max_length[40]',
