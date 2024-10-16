@@ -106,6 +106,9 @@ class Validation extends BaseConfig
             'name' => 'max_length[45]',
             'region_id' => 'integer',
         ],
+        'organizations' => [
+            'name' => 'max_length[40]',
+        ],
         'accounts'  => [
             'title' => 'in_list[mr,mrs,miss,dr,prof]',
             'name' => 'max_length[60]',

@@ -63,7 +63,7 @@ class OrganizationController extends ResourceController
             ], Response::HTTP_NOT_FOUND);
         }
         // authorization checks
-        $response = auth()->can('delete', 'organizations', ['owner'], [$organization]);
+        $response = auth()->can('update', 'organizations', ['owner'], [$organization]);
         if ($response->denied())
             return $response->responsed();
 
