@@ -11,14 +11,12 @@ class DistrictController extends ResourceController
 {
     protected $modelName = 'App\Models\DistrictModel';
     protected $format    = 'json';
+    protected  $allowedColumns = [];
 
     public function index()
     {
-
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
+        $params = $this->request->getVar(['columns','filters', 'sort', 'page', 'pageSize']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
         return $response->getCollectionResponse();
     }
@@ -53,7 +51,12 @@ class DistrictController extends ResourceController
 
     public function update($id = null)
     {
-        $data = $this->request->getRawInput();
+        if (!$this->model->find($id)) {
+            return $this->respond([
+                'status' => false,
+                'message' => 'District not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         $rules = config('Validation')->update['districts'];
         // Validate input
@@ -64,12 +67,7 @@ class DistrictController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
-        if (!$this->model->find($id)) {
-            return $this->respond([
-                'status' => false,
-                'message' => 'District not found'
-            ], Response::HTTP_NOT_FOUND);
-        }
+        $data = $this->validator->getValidated();
 
         $this->model->update($id, $data);
         return $this->respond([
@@ -81,10 +79,8 @@ class DistrictController extends ResourceController
 
     public function show($id = null)
     {
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-        $this->model->find($id);
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
+        $params = $this->request->getVar(['columns']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
         return $response->getSingleResponse();
     }

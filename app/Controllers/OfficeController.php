@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\OfficeModel;
-use App\Models\OrganizationModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
@@ -12,22 +10,18 @@ class OfficeController extends ResourceController
 {
     protected $modelName = 'App\Models\OfficeModel';
     protected $format    = 'json';
+    protected $allowedColumns = [];
 
     public function index()
     {
+        $params = $this->request->getVar(['columns', 'filters', 'sort', 'page', 'pageSize']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
-
-        return $response->getCollectionResponse();
+        return $response->getCollectionResponse(true, ['owner', 'orgid']);
     }
 
     public function create()
     {
-        $data = (array)$this->request->getVar();
-
         $rules = config('Validation')->create['offices'];
         // Validate input
         if (!$this->validate($rules)) {
@@ -37,17 +31,13 @@ class OfficeController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
-        $orgModel = new OrganizationModel();
-
-        if (!$orgModel->find($data['orgid'])) {
-            return $this->respond([
-                'status'  => false,
-                'message' => 'Failed validating data',
-                'error'   =>    ["orgid" => "The Organization doesn't exist."]
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
+        $data = $this->validator->getValidated();
         $data['off_code'] = $data['off_code'] ?? $this->model->generateCode($data['orgid']);
+        $data['creator'] = auth()->user_id();
+        
+        $response = auth()->can('create', 'offices', ['owner', 'orgid'], [$data]);
+        if ($response->denied())
+            return $response->responsed();
 
         if ($this->model->save($data)) {
             return $this->respondCreated([
@@ -66,7 +56,17 @@ class OfficeController extends ResourceController
 
     public function update($id = null)
     {
-        $data = $this->request->getRawInput();
+        $office = $this->model->find($id);
+        if (!$office) {
+            return $this->respond([
+                'status' => false,
+                'message' => 'Office not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+        $response = auth()->can('update', 'offices', ['owner', 'orgid'], [$office]);
+        if ($response->denied())
+            return $response->responsed();
+
         $rules = config('Validation')->update['offices'];
         // Validate input
         if (!$this->validate($rules)) {
@@ -76,12 +76,7 @@ class OfficeController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
-        if (!$this->model->find($id)) {
-            return $this->respond([
-                'status' => false,
-                'message' => 'Office not found'
-            ], Response::HTTP_NOT_FOUND);
-        }
+        $data = $this->validator->getValidated();
 
         $this->model->update($id, $data);
         return $this->respond([
@@ -93,12 +88,9 @@ class OfficeController extends ResourceController
 
     public function show($id = null)
     {
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-        $this->model->find($id);
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
-
-        return $response->getSingleResponse();
+        $params = $this->request->getVar(['columns']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
+        return $response->getSingleResponse(true, ['owner', 'orgid']);
     }
 
     public function delete($id = null)
@@ -110,6 +102,9 @@ class OfficeController extends ResourceController
                 'message' => 'Office not found'
             ], Response::HTTP_NOT_FOUND);
         }
+        $response = auth()->can('delete', 'offices', ['owner', 'orgid'], [$office]);
+        if ($response->denied())
+            return $response->responsed();
 
         if ($this->model->delete($id)) {
             return $this->respondDeleted([

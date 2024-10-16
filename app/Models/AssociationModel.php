@@ -51,4 +51,17 @@ class AssociationModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function generateCode(string $orgId): string
+    {
+        $prefix = intval(preg_replace('/\D/', '', $orgId));
+        $code = $prefix . "001";
+        $last = $this->where('orgid', $orgId)->orderBy('id', 'desc')->first();
+        if ($last) {
+            $code = intval(preg_replace('/\D/', '', substr($last->assoc_code, 3))) + 1;
+            $code = str_pad($code, 3, 0, STR_PAD_LEFT);
+            $code = $prefix.$code;
+        }
+        return "A".$code;
+    }
 }

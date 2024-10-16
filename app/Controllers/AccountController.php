@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\AccountModel;
-use App\Models\OrganizationModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
@@ -16,7 +14,7 @@ class AccountController extends ResourceController
 
     public function index()
     {
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
+        $params = $this->request->getVar(['columns','filters', 'sort', 'page', 'pageSize']);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
         return $response->getCollectionResponse(true, ['owner', 'orgid']);
     }
@@ -33,17 +31,7 @@ class AccountController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
         $data = $this->validator->getValidated();
-        $orgModel = new OrganizationModel();
-
-        if (!$orgModel->find($data['orgid'])) {
-            return $this->respond([
-                'status'  => false,
-                'message' => 'Failed validating data',
-                'error'   =>    ["orgid" => "The Organization doesn't exist."]
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        $data['owner'] = auth()->user()->owner;
+        $data['acnum'] = $data['acnum'] ?? $this->model->generateCode($data['orgid']);
         $data['creator'] = auth()->user_id();
 
         if ($this->model->save($data)) {

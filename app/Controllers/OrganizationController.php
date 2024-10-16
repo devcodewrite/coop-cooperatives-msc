@@ -31,13 +31,14 @@ class OrganizationController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
         $data = $this->validator->getValidated();
-
+        $data['creator'] = auth()->user_id();
+        
         $response = auth()->can('create', 'organizations', ['owner'], [$data]);
         if ($response->denied())
             return $response->responsed();
 
         $data['orgid'] = $this->model->generateId($data['name']);
-
+   
         if ($this->model->save($data)) {
             return $this->respondCreated([
                 'status' => true,

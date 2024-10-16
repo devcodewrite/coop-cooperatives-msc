@@ -26,8 +26,6 @@ class PassbookController extends ResourceController
 
     public function create()
     {
-        $data = (array)$this->request->getVar();
-
         $rules = config('Validation')->create['passbooks'];
         // Validate input
         if (!$this->validate($rules)) {
@@ -39,16 +37,13 @@ class PassbookController extends ResourceController
                 ]
             )->setStatusCode(Response::HTTP_BAD_REQUEST);
         }
-
-        $orgModel = new OrganizationModel();
-
-        if (!$orgModel->find($data['orgid'])) {
-            return $this->respond([
-                'status'  => false,
-                'message' => 'Failed validating data',
-                'error'   =>    ["orgid" => "The Organization doesn't exist."]
-            ], Response::HTTP_BAD_REQUEST);
-        }
+        $data = $this->validator->getValidated();
+        $data['pbnum'] = $data['pbnum'] ?? $this->model->generateCode($data['orgid']);
+        $data['creator'] = auth()->user_id();
+        
+        $response = auth()->can('create', 'passbooks', ['owner', 'orgid','association_id'], [$data]);
+        if ($response->denied())
+            return $response->responsed();
 
         if ($this->model->save($data)) {
             return $this->respondCreated([

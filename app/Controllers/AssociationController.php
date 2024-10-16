@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\AssociationModel;
-use App\Models\OrganizationModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
@@ -12,22 +10,18 @@ class AssociationController extends ResourceController
 {
     protected $modelName = 'App\Models\AssociationModel';
     protected $format    = 'json';
+    protected $allowedColumns = [];
 
     public function index()
     {
+        $params = $this->request->getVar(['columns','filters', 'sort', 'page', 'pageSize']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
-
-        return $response->getCollectionResponse();
+        return $response->getCollectionResponse(true, ['owner', 'orgid']);
     }
 
     public function create()
     {
-        $data = (array)$this->request->getVar();
-
         $rules = config('Validation')->create['associations'];
         // Validate input
         if (!$this->validate($rules)) {
@@ -37,16 +31,13 @@ class AssociationController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
+        $data = $this->validator->getValidated();
+        $data['assoc_code'] = $data['assoc_code'] ?? $this->model->generateCode($data['orgid']);
+        $data['creator'] = auth()->user_id();
 
-        $orgModel = new OrganizationModel();
-
-        if (!$orgModel->find($data['orgid'])) {
-            return $this->respond([
-                'status'  => false,
-                'message' => 'Failed validating data',
-                'error'   =>    ["orgid" => "The Organization doesn't exist."]
-            ], Response::HTTP_BAD_REQUEST);
-        }
+        $response = auth()->can('create', 'associations', ['owner', 'orgid'], [$data]);
+        if ($response->denied())
+            return $response->responsed();
 
         if ($this->model->save($data)) {
             return $this->respondCreated([
@@ -93,12 +84,10 @@ class AssociationController extends ResourceController
 
     public function show($id = null)
     {
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-        $this->model->find($id);
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
+        $params = $this->request->getVar(['columns']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
-        return $response->getSingleResponse();
+        return $response->getSingleResponse(true, ['owner', 'orgid']);
     }
 
     public function delete($id = null)
@@ -110,6 +99,9 @@ class AssociationController extends ResourceController
                 'message' => 'Association not found'
             ], Response::HTTP_NOT_FOUND);
         }
+        $response = auth()->can('delete', 'associations', ['owner', 'orgid'], [$association]);
+        if ($response->denied())
+            return $response->responsed();
 
         if ($this->model->delete($id)) {
             return $this->respondDeleted([

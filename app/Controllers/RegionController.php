@@ -12,22 +12,18 @@ class RegionController extends ResourceController
 {
     protected $modelName = 'App\Models\RegionModel';
     protected $format    = 'json';
+    protected $allowedColumns;
 
     public function index()
     {
-
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
+        $params = $this->request->getVar(['columns','filters', 'sort', 'page', 'pageSize']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
         return $response->getCollectionResponse();
     }
 
     public function create()
     {
-        $data = $this->request->getVar();
-
         $rules = config('Validation')->create['regions'];
         // Validate input
         if (!$this->validate($rules)) {
@@ -37,6 +33,7 @@ class RegionController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
+        $data = $this->validator->getValidated();
 
         if ($this->model->save($data)) {
             return $this->respondCreated([
@@ -55,7 +52,13 @@ class RegionController extends ResourceController
 
     public function update($id = null)
     {
-        $data = $this->request->getJSON();
+            
+        if (!$this->model->find($id)) {
+            return $this->respond([
+                'status' => false,
+                'message' => 'Region not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         $rules = config('Validation')->update['regions'];
         // Validate input
@@ -66,14 +69,8 @@ class RegionController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
-
-        if (!$this->model->find($id)) {
-            return $this->respond([
-                'status' => false,
-                'message' => 'Region not found'
-            ], Response::HTTP_NOT_FOUND);
-        }
-
+        $data = $this->validator->getValidated();
+        
         $this->model->update($id, $data);
         return $this->respond([
             'status' => true,
@@ -84,11 +81,8 @@ class RegionController extends ResourceController
 
     public function show($id = null)
     {
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-        $this->model->find($id);
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
-
+        $params = $this->request->getVar(['columns']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
         return $response->getSingleResponse();
     }
 
