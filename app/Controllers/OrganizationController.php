@@ -32,7 +32,7 @@ class OrganizationController extends ResourceController
         }
         $data = $this->validator->getValidated();
 
-        $response = auth()->can('delete', 'organizations', ['owner'], [$data]);
+        $response = auth()->can('create', 'organizations', ['owner'], [$data]);
         if ($response->denied())
             return $response->responsed();
 
