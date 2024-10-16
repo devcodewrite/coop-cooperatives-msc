@@ -32,6 +32,10 @@ class OrganizationController extends ResourceController
         }
         $data = $this->validator->getValidated();
 
+        $response = auth()->can('delete', 'organizations', ['owner'], [$data]);
+        if ($response->denied())
+            return $response->responsed();
+
         $data['orgid'] = $this->model->generateId($data['name']);
 
         if ($this->model->save($data)) {
