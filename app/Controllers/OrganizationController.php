@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\OrganizationModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
@@ -11,24 +10,17 @@ class OrganizationController extends ResourceController
 {
     protected $modelName = 'App\Models\OrganizationModel';
     protected $format    = 'json';
+    protected $allowedColumns = [];
 
     public function index()
     {
-        $response = auth()->can('view', 'organizations');
-        if ($response->denied())
-            return $response->responsed();
-        auth()->applyConditionsToModel($this->model, 'users');
-
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
+        $params = $this->request->getVar(['columns', 'filters', 'sort', 'page', 'pageSize']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
         return $response->getCollectionResponse();
     }
 
     public function create()
     {
-        $data = (array)$this->request->getVar();
         $rules = config('Validation')->create['organizations'];
         // Validate input
         if (!$this->validate($rules)) {
@@ -38,6 +30,8 @@ class OrganizationController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
+        $data = $this->validator->getValidated();
+
         $data['orgid'] = $this->model->generateId($data['name']);
 
         if ($this->model->save($data)) {
@@ -57,7 +51,17 @@ class OrganizationController extends ResourceController
 
     public function update($id = null)
     {
-        $data = $this->request->getRawInput();
+        $organization = $this->model->find($id);
+        if (!$organization) {
+            return $this->respond([
+                'status' => false,
+                'message' => 'Organization not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+        // authorization checks
+        $response = auth()->can('delete', 'organizations', ['owner'], [$organization]);
+        if ($response->denied())
+            return $response->responsed();
 
         $rules = config('Validation')->update['organizations'];
         // Validate input
@@ -69,12 +73,7 @@ class OrganizationController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        if (!$this->model->find($id)) {
-            return $this->respond([
-                'status' => false,
-                'message' => 'Organization not found'
-            ], Response::HTTP_NOT_FOUND);
-        }
+        $data = $this->validator->getValidated();
 
         $this->model->update($id, $data);
         return $this->respond([
@@ -86,15 +85,8 @@ class OrganizationController extends ResourceController
 
     public function show($id = null)
     {
-        $response = auth()->can('view', 'organizations');
-        if ($response->denied())
-            return $response->responsed();
-        auth()->applyConditionsToModel($this->model, 'users', ['orgid' => $id]);
-
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-        $this->model->find($id);
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
+        $params = $this->request->getVar(['columns']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
         return $response->getSingleResponse();
     }
@@ -108,6 +100,10 @@ class OrganizationController extends ResourceController
                 'message' => 'Organization not found'
             ], Response::HTTP_NOT_FOUND);
         }
+        // authorization checks
+        $response = auth()->can('delete', 'organizations', ['owner'], [$organization]);
+        if ($response->denied())
+            return $response->responsed();
 
         if ($this->model->delete($id)) {
             return $this->respondDeleted([
