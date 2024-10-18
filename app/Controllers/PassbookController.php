@@ -63,7 +63,17 @@ class PassbookController extends ResourceController
 
     public function update($id = null)
     {
-        $data = $this->request->getRawInput();
+        $passbook = $this->model->find($id);
+        if (!$passbook) {
+            return $this->respond([
+                'status' => false,
+                'message' => 'Passbook not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $response = auth()->can('update', 'passbooks', ['owner', 'orgid', 'association_id'], [$passbook]);
+        if ($response->denied())
+            return $response->responsed();
 
         $rules = config('Validation')->update['passbooks'];
         // Validate input
@@ -74,13 +84,7 @@ class PassbookController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
-
-        if (!$this->model->find($id)) {
-            return $this->respond([
-                'status' => false,
-                'message' => 'Passbook not found'
-            ], Response::HTTP_NOT_FOUND);
-        }
+        $data = $this->validator->getValidated();
 
         $this->model->update($id, $data);
         return $this->respond([
