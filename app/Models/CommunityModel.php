@@ -14,7 +14,7 @@ class CommunityModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
-        'orgid',
+        'office_id',
         'creator',
         'owner',
         'deleted_at',
