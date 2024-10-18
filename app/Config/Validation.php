@@ -109,28 +109,28 @@ class Validation extends BaseConfig
         ],
         'districts' => [
             'name' => 'if_exist|max_length[45]',
-            'region_id' => 'if_exist|is_not_unique[regions.id,id,id]',
+            'region_id' => 'if_exist|is_not_unique[regions.id]',
         ],
         'organizations' => [
             'name' => 'if_exist|max_length[40]'
         ],
         'offices' => [
             'name' => 'if_exist|max_length[40]',
-            'region_id' => 'if_exist|is_not_unique[regions.id,id,id]',
-            'district_id' => 'if_exist|is_not_unique[districts.id,id,id]',
+            'region_id' => 'if_exist|is_not_unique[regions.id]',
+            'district_id' => 'if_exist|is_not_unique[districts.id]',
         ],
         'communities' => [
             'name' => 'if_exist|max_length[40]',
-            'office_id' => 'if_exist|is_not_unique[offices.id,id,id]',
-            'region_id' => 'if_exist|is_not_unique[regions.id,id,id]',
-            'district_id' => 'if_exist|is_not_unique[districts.id,id,id]'
+            'office_id' => 'if_exist|is_not_unique[offices.id]',
+            'region_id' => 'if_exist|is_not_unique[regions.id]',
+            'district_id' => 'if_exist|is_not_unique[districts.id]'
         ],
         'associations' => [
             'name' => 'if_exist|max_length[45]',
-            'community_id' => 'if_exist|is_not_unique[communities.id,id,id]',
-            'office_id' => 'if_exist|is_not_unique[offices.id,id,id]',
+            'community_id' => 'if_exist|is_not_unique[communities.id]',
+            'office_id' => 'if_exist|is_not_unique[offices.id]',
             'owner' => 'if_exist|min_length[12]',
-            'orgid' => 'if_exist|max_length[10]|is_not_unique[organizations.orgid,orgid,orgid]',
+            'orgid' => 'if_exist|max_length[10]|is_not_unique[organizations.orgid]',
         ],
         'accounts'  => [
             'title' => 'if_exist|in_list[mr,mrs,miss,dr,prof]',
@@ -146,13 +146,13 @@ class Validation extends BaseConfig
             'education' => 'if_exist|in_list[none,primary,secondary,tertiary,postgraduate,other]',
             'nid_type' => 'if_exist|in_list[passport,driver_license,voter_id,national_id_card]',
             'nid' => 'if_exist|max_length[60]',
-            'orgid' => 'if_exist|max_length[10]|is_not_unique[organizations.orgid,orgid,orgid]',
-            'community_id' => 'if_exist|is_not_unique[communities.id,id,id]',
+            'orgid' => 'if_exist|max_length[10]|is_not_unique[organizations.orgid]',
+            'community_id' => 'if_exist|is_not_unique[communities.id]',
         ],
         'passbooks' => [
-            'account_id' => 'if_exist|is_not_unique[accounts.id,id,id]',
-            'association_id' => 'if_exist|is_not_unique[associations.id,id,id]',
-            'pbnum' => 'if_exist|max_length[10]|is_not_unique[passbooks.pbnum,pbnum,pbnum]',
+            'account_id' => 'if_exist|is_not_unique[accounts.id]',
+            'association_id' => 'if_exist|is_not_unique[associations.id]',
+            'pbnum' => 'if_exist|max_length[10]|is_not_unique[passbooks.pbnum]',
         ]
         // Other validation rules similar to 'create', with only required fields removed
     ];
