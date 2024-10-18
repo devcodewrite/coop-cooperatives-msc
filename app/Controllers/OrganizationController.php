@@ -16,7 +16,7 @@ class OrganizationController extends ResourceController
     {
         $params = $this->request->getVar(['columns', 'filters', 'sort', 'page', 'pageSize']);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
-        return $response->getCollectionResponse();
+        return $response->getCollectionResponse(true, ['owner']);
     }
 
     public function create()
@@ -94,7 +94,7 @@ class OrganizationController extends ResourceController
         $this->model->where('orgid',$id);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
-        return $response->getSingleResponse();
+        return $response->getSingleResponse(true,['owner']);
     }
 
     public function delete($id = null)
