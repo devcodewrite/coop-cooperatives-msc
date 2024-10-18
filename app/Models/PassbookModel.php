@@ -61,8 +61,8 @@ class PassbookModel extends Model
         $data = $record['data'];
         $assocModel = new AssociationModel();
         $accountModel = new AccountModel();
-        $record['data']['assoc_code'] = $assocModel->find($data['association_id'])['assoc_code'];
-        $record['data']['acnum'] = $accountModel->find($data['account_id'])['acnum'];
+        $record['data']['assoc_code'] = $assocModel->find($data['association_id'])->assoc_code;
+        $record['data']['acnum'] = $accountModel->find($data['account_id'])->acnum;
 
         return $record;
     }
