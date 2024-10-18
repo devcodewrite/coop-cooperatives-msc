@@ -11,7 +11,12 @@ class OrganizationController extends ResourceController
 {
     protected $modelName = OrganizationModel::class;
     protected $format    = 'json';
-    protected $allowedColumns = [];
+    protected $allowedColumns = [
+        'name',
+        'owner',
+        'updated_at',
+        'created_at'
+    ];
 
     public function index()
     {
