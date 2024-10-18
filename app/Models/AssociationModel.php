@@ -14,7 +14,9 @@ class AssociationModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
+        'community_id',
         'orgid',
+        'office_id',
         'creator',
         'owner',
         'deleted_at',
@@ -60,8 +62,8 @@ class AssociationModel extends Model
         if ($last) {
             $code = intval(preg_replace('/\D/', '', substr($last->assoc_code, 3))) + 1;
             $code = str_pad($code, 3, 0, STR_PAD_LEFT);
-            $code = $prefix.$code;
+            $code = $prefix . $code;
         }
-        return "A".$code;
+        return "A" . $code;
     }
 }

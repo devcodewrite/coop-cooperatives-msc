@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\AssociationModel;
 use App\Models\OrganizationModel;
 use App\Models\PassbookModel;
 use CodeIgniter\HTTP\Response;
@@ -37,7 +38,7 @@ class PassbookController extends ResourceController
                 ]
             )->setStatusCode(Response::HTTP_BAD_REQUEST);
         }
-        $data = $this->validator->getValidated();
+        $data = $this->validator->getValidated(); 
         $data['pbnum'] = $data['pbnum'] ?? $this->model->generateCode($data['orgid']);
         $data['creator'] = auth()->user_id();
 

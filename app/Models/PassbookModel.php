@@ -15,6 +15,8 @@ class PassbookModel extends Model
     protected $allowedFields    = [
         'pbnum',
         'acnum',
+        'association_id',
+        'account_id',
         'assoc_code',
         'orgid',
         'creator',
@@ -45,14 +47,25 @@ class PassbookModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
+    protected $beforeInsert   = ['addFields'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
+    protected $beforeUpdate   = ['addFields'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function addFields($record)
+    {
+        $data = $record['data'];
+        $assocModel = new AssociationModel();
+        $accountModel = new AccountModel();
+        $data['assoc_code'] = $assocModel->find($data['association_id'])->first()['assoc_code'];
+        $data['acnum'] = $accountModel->find($data['account_id'])->first()['acnum'];
+
+        return $record;
+    }
 
     public function generateCode(string $orgId): string
     {
