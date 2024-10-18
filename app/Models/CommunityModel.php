@@ -52,10 +52,10 @@ class CommunityModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
-    public function generateCode(string $orgId): string
+    public function generateCode(string $owner): string
     {
         $code = "com_001";
-        $last = $this->where('orgid', $orgId)->orderBy('id', 'desc')->first();
+        $last = $this->where('owner', $owner)->orderBy('id', 'desc')->first();
         if ($last) {
             $code = intval(preg_replace('/\D/', '', $last->com_code)) + 1;
             $code = "com_" . str_pad($code, 3, 0, STR_PAD_LEFT);

@@ -32,10 +32,10 @@ class CommunityController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
         $data = $this->validator->getValidated();
-        $data['com_code'] = $data['com_code'] ?? $this->model->generateCode($data['orgid']);
+        $data['com_code'] = $data['com_code'] ?? $this->model->generateCode($data['owner']);
         $data['creator'] = auth()->user_id();
         
-        $response = auth()->can('create', 'communities', ['owner', 'orgid'], [$data]);
+        $response = auth()->can('create', 'communities', ['owner'], [$data]);
         if ($response->denied())
             return $response->responsed();
 
