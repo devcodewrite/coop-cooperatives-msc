@@ -58,7 +58,6 @@ class AccountController extends ResourceController
                 'message' => "Account doesn't exist.",
             ], Response::HTTP_NOT_FOUND);
         }
-
         $response = auth()->can('update', 'accounts', ['owner', 'orgid'], [$account]);
         if ($response->denied())
             return $response->responsed();
@@ -72,12 +71,6 @@ class AccountController extends ResourceController
                 'message' => 'Failed validating data',
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
-        }
-        if (!$this->model->find($id)) {
-            return $this->respond([
-                'status' => false,
-                'message' => 'Account not found'
-            ], Response::HTTP_NOT_FOUND);
         }
         $data = $this->validator->getValidated();
 

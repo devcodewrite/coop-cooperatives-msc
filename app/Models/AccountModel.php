@@ -56,14 +56,22 @@ class AccountModel extends Model
 
     // Callbacks
     protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
+    protected $beforeInsert   = ['formatFields'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
+    protected $beforeUpdate   = ['formatFields'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function formatFields($record)
+    {
+        $data = $record['data'];
+        $record['data']['dateofbirth'] = isset($data['dateofbirth']) ? date('Y-m-d', strtotime($data['dateofbirth'])) : null;
+
+        return $record;
+    }
 
     public function generateCode(string $orgId): string
     {
@@ -73,7 +81,7 @@ class AccountModel extends Model
         if ($last) {
             $code = intval(preg_replace('/\D/', '', substr($last->acnum, 3))) + 1;
             $code = str_pad($code, 6, 0, STR_PAD_LEFT);
-            $code = $prefix.$code;
+            $code = $prefix . $code;
         }
         return $code;
     }
