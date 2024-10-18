@@ -64,7 +64,7 @@ class Validation extends BaseConfig
         ],
         'communities' => [
             'name' => 'required|max_length[40]',
-            'office_id' => 'required|integer',
+            'office_id' => 'required|integer|is_not_unique[offices.id]',
             'region_id' => 'required|integer',
             'district_id' => 'required|integer',
             'owner' => 'required|min_length[3]',
