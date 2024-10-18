@@ -91,15 +91,8 @@ class AccountController extends ResourceController
 
     public function show($id = null)
     {
-        $account = $this->model->find($id);
-        if (!$account) {
-            return $this->respond([
-                'status'  => false,
-                'message' => "Account doesn't exist.",
-            ], Response::HTTP_NOT_FOUND);
-        }
-        
         $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
+        $this->model->where('id',$id);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
         return $response->getSingleResponse(true, ['owner', 'orgid']);

@@ -89,8 +89,8 @@ class CommunityController extends ResourceController
     public function show($id = null)
     {
         $params = $this->request->getVar(['columns']);
+        $this->model->where('id',$id);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
-
         return $response->getSingleResponse(true, ['owner', 'orgid']);
     }
 

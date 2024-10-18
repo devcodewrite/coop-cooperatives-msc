@@ -40,8 +40,8 @@ class PassbookController extends ResourceController
         $data = $this->validator->getValidated();
         $data['pbnum'] = $data['pbnum'] ?? $this->model->generateCode($data['orgid']);
         $data['creator'] = auth()->user_id();
-        
-        $response = auth()->can('create', 'passbooks', ['owner', 'orgid','association_id'], [$data]);
+
+        $response = auth()->can('create', 'passbooks', ['owner', 'orgid', 'association_id'], [$data]);
         if ($response->denied())
             return $response->responsed();
 
@@ -93,7 +93,7 @@ class PassbookController extends ResourceController
     {
         $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
         $allowedColumns = [];
-        $this->model->find($id);
+        $this->model->where('id', $id);
         $response = new ApiResponse($this->model, $params, $allowedColumns);
 
         return $response->getSingleResponse();

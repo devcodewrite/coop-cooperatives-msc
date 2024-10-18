@@ -16,7 +16,7 @@ class RegionController extends ResourceController
 
     public function index()
     {
-        $params = $this->request->getVar(['columns','filters', 'sort', 'page', 'pageSize']);
+        $params = $this->request->getVar(['columns', 'filters', 'sort', 'page', 'pageSize']);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
         return $response->getCollectionResponse();
@@ -52,7 +52,7 @@ class RegionController extends ResourceController
 
     public function update($id = null)
     {
-            
+
         if (!$this->model->find($id)) {
             return $this->respond([
                 'status' => false,
@@ -70,7 +70,7 @@ class RegionController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
         $data = $this->validator->getValidated();
-        
+
         $this->model->update($id, $data);
         return $this->respond([
             'status' => true,
@@ -82,6 +82,7 @@ class RegionController extends ResourceController
     public function show($id = null)
     {
         $params = $this->request->getVar(['columns']);
+        $this->model->where('id', $id);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
         return $response->getSingleResponse();
     }
