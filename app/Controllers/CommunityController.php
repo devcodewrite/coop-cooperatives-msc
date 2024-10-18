@@ -10,7 +10,18 @@ class CommunityController extends ResourceController
 {
     protected $modelName = 'App\Models\CommunityModel';
     protected $format    = 'json';
-    protected $allowedColumns = [];
+    protected $allowedColumns = [
+        'id',
+        'name',
+        'com_code',
+        'office_id',
+        "region_id",
+        "district_id",
+        'creator',
+        'owner',
+        'updated_at',
+        'created_at'
+    ];
 
     public function index()
     {

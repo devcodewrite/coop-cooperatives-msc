@@ -10,7 +10,17 @@ class OfficeController extends ResourceController
 {
     protected $modelName = 'App\Models\OfficeModel';
     protected $format    = 'json';
-    protected $allowedColumns = [];
+    protected $allowedColumns = [
+        'id',
+        'name',
+        'off_code',
+        'region_id',
+        'district_id',
+        'creator',
+        'owner',
+        'updated_at',
+        'created_at'
+    ];
 
     public function index()
     {

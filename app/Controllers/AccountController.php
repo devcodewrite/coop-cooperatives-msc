@@ -10,7 +10,28 @@ class AccountController extends ResourceController
 {
     protected $modelName = 'App\Models\AccountModel';
     protected $format    = 'json';
-    protected $allowedColumns = [];
+    protected $allowedColumns = [
+        'id',
+        'acnum',
+        'title',
+        'name',
+        'given_name',
+        'family_name',
+        'sex',
+        'dateofbirth',
+        'occupation',
+        'primary_phone',
+        'email',
+        'marital_status',
+        'education',
+        'nid_type',
+        'nid',
+        'orgid',
+        'creator',
+        'owner',
+        'updated_at',
+        'created_at'
+    ];
 
     public function index()
     {

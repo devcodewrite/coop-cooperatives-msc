@@ -13,16 +13,25 @@ class PassbookController extends ResourceController
 {
     protected $modelName = 'App\Models\PassbookModel';
     protected $format    = 'json';
-
+    protected $allowedColumns = [
+        'id',
+        'pbnum',
+        'acnum',
+        'association_id',
+        'account_id',
+        'assoc_code',
+        'orgid',
+        'creator',
+        'owner',
+        'updated_at',
+        'created_at'
+    ];
     public function index()
     {
+        $params = $this->request->getVar(['columns', 'filters', 'sort', 'page', 'pageSize']);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
-
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
-
-        return $response->getCollectionResponse();
+        return $response->getCollectionResponse(true, ['owner', 'orgid', 'association_id']);
     }
 
     public function create()
@@ -38,7 +47,7 @@ class PassbookController extends ResourceController
                 ]
             )->setStatusCode(Response::HTTP_BAD_REQUEST);
         }
-        $data = $this->validator->getValidated(); 
+        $data = $this->validator->getValidated();
         $data['pbnum'] = $data['pbnum'] ?? $this->model->generateCode($data['orgid']);
         $data['creator'] = auth()->user_id();
 
@@ -96,12 +105,11 @@ class PassbookController extends ResourceController
 
     public function show($id = null)
     {
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
-        $allowedColumns = [];
+        $params = $this->request->getVar(['columns']);
         $this->model->where('id', $id);
-        $response = new ApiResponse($this->model, $params, $allowedColumns);
+        $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
-        return $response->getSingleResponse();
+        return $response->getSingleResponse(true, ['owner', 'orgid', 'association_id']);
     }
 
     public function delete($id = null)
@@ -113,6 +121,10 @@ class PassbookController extends ResourceController
                 'message' => 'Passbook not found'
             ], Response::HTTP_NOT_FOUND);
         }
+
+        $response = auth()->can('delete', 'passbooks', ['owner', 'orgid', 'association_id'], [$passbook]);
+        if ($response->denied())
+            return $response->responsed();
 
         if ($this->model->delete($id)) {
             return $this->respondDeleted([

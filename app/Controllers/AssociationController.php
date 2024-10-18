@@ -10,7 +10,18 @@ class AssociationController extends ResourceController
 {
     protected $modelName = 'App\Models\AssociationModel';
     protected $format    = 'json';
-    protected $allowedColumns = [];
+    protected $allowedColumns = [
+        'id',
+        'name',
+        'community_id',
+        'assoc_code',
+        'orgid',
+        'office_id',
+        'creator',
+        'owner',
+        'updated_at',
+        'created_at'
+    ];
 
     public function index()
     {

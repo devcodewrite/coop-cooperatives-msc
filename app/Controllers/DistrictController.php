@@ -11,7 +11,16 @@ class DistrictController extends ResourceController
 {
     protected $modelName = 'App\Models\DistrictModel';
     protected $format    = 'json';
-    protected  $allowedColumns = [];
+    protected  $allowedColumns = [
+        'id',
+        'name',
+        'region_id',
+        'orgid',
+        'creator',
+        'owner',
+        'updated_at',
+        'created_at'
+    ];
 
     public function index()
     {

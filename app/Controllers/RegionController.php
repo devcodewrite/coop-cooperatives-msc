@@ -12,7 +12,16 @@ class RegionController extends ResourceController
 {
     protected $modelName = 'App\Models\RegionModel';
     protected $format    = 'json';
-    protected $allowedColumns;
+    protected $allowedColumns = [
+        'id',
+        'name',
+        'orgid',
+        'creator',
+        'owner',
+        'deleted_at',
+        'updated_at',
+        'created_at'
+    ];
 
     public function index()
     {
