@@ -14,6 +14,7 @@ class CommunityModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
+        'com_code',
         'office_id',
         "region_id",
         "district_id",
