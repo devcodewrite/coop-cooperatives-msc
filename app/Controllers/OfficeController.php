@@ -18,6 +18,7 @@ class OfficeController extends ResourceController
         'district_id',
         'creator',
         'owner',
+        "orgid",
         'updated_at',
         'created_at'
     ];
@@ -44,7 +45,7 @@ class OfficeController extends ResourceController
         $data = $this->validator->getValidated();
         $data['off_code'] = $data['off_code'] ?? $this->model->generateCode($data['orgid']);
         $data['creator'] = auth()->user_id();
-        
+
         $response = auth()->can('create', 'offices', ['owner', 'orgid'], [$data]);
         if ($response->denied())
             return $response->responsed();
@@ -99,7 +100,7 @@ class OfficeController extends ResourceController
     public function show($id = null)
     {
         $params = $this->request->getVar(['columns']);
-        $this->model->where('id',$id);
+        $this->model->where('id', $id);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
         return $response->getSingleResponse(true, ['owner', 'orgid']);
     }

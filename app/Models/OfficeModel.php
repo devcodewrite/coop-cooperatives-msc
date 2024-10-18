@@ -17,6 +17,7 @@ class OfficeModel extends Model
         'off_code',
         'region_id',
         'district_id',
+        "orgid",
         'creator',
         'owner',
         'deleted_at',
