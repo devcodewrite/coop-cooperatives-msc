@@ -15,6 +15,8 @@ class CommunityModel extends Model
     protected $allowedFields    = [
         'name',
         'office_id',
+        "region_id",
+        "district_id",
         'creator',
         'owner',
         'deleted_at',
@@ -63,4 +65,3 @@ class CommunityModel extends Model
         return $code;
     }
 }
-
