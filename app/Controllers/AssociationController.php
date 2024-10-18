@@ -56,7 +56,18 @@ class AssociationController extends ResourceController
 
     public function update($id = null)
     {
-        $data = $this->request->getRawInput();
+        $association = $this->model->find($id);
+        if (!$association) {
+            return $this->respond([
+                'status' => false,
+                'message' => 'Association not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $response = auth()->can('update', 'associations', ['owner', 'orgid'], [$association]);
+        if ($response->denied())
+            return $response->responsed();
+
         $rules = config('Validation')->update['associations'];
         // Validate input
         if (!$this->validate($rules)) {
@@ -66,13 +77,7 @@ class AssociationController extends ResourceController
                 'error'   => $this->validator->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
-
-        if (!$this->model->find($id)) {
-            return $this->respond([
-                'status' => false,
-                'message' => 'Association not found'
-            ], Response::HTTP_NOT_FOUND);
-        }
+        $data = $this->validator->getValidated();
 
         $this->model->update($id, $data);
         return $this->respond([

@@ -59,7 +59,7 @@ class Validation extends BaseConfig
             'name' => 'required|max_length[40]',
             'region_id' => 'required|is_not_unique[regions.id]',
             'district_id' => 'required|is_not_unique[districts.id]',
-            'owner' => 'required|min_length[3]',
+            'owner' => 'required|min_length[12]',
             'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ],
         'communities' => [
@@ -67,13 +67,13 @@ class Validation extends BaseConfig
             'office_id' => 'required|integer|is_not_unique[offices.id]',
             'region_id' => 'required|integer|is_not_unique[regions.id]',
             'district_id' => 'required|integer|is_not_unique[districts.id]',
-            'owner' => 'required|min_length[3]',
+            'owner' => 'required|min_length[12]',
         ],
         'associations' => [
             'name' => 'required|max_length[45]',
             'community_id' => 'required|is_not_unique[communities.id]',
             'office_id' => 'required|is_not_unique[offices.id]',
-            'owner' => 'required|min_length[3]',
+            'owner' => 'required|min_length[12]',
             'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ],
         'accounts' => [
@@ -90,14 +90,14 @@ class Validation extends BaseConfig
             'education' => 'permit_empty|in_list[none,primary,secondary,tertiary,postgraduate,other]',
             'nid_type' => 'permit_empty|in_list[passport,driver_license,voter_id,national_id_card]',
             'nid' => 'permit_empty|max_length[20]',
-            'owner' => 'required|min_length[3]',
+            'owner' => 'required|min_length[12]',
             'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
             'community_id' => 'required|integer|is_not_unique[communities.id]',
         ],
         'passbooks' => [
             'account_id' => 'required|integer|is_not_unique[accounts.id]',
             'association_id' => 'required|integer|is_not_unique[associations.id]',
-            'owner' => 'required|min_length[3]',
+            'owner' => 'required|min_length[12]',
             'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ]
     ];
@@ -124,6 +124,13 @@ class Validation extends BaseConfig
             'office_id' => 'if_exist|is_not_unique[offices.id,id,id]',
             'region_id' => 'if_exist|is_not_unique[regions.id,id,id]',
             'district_id' => 'if_exist|is_not_unique[districts.id,id,id]'
+        ],
+        'associations' => [
+            'name' => 'if_exist|max_length[45]',
+            'community_id' => 'if_exist|is_not_unique[communities.id,id,id]',
+            'office_id' => 'if_exist|is_not_unique[offices.id,id,id]',
+            'owner' => 'if_exist|min_length[12]',
+            'orgid' => 'if_exist|max_length[10]|is_not_unique[organizations.orgid,orgid,orgid]',
         ],
         'accounts'  => [
             'title' => 'if_exist|in_list[mr,mrs,miss,dr,prof]',
