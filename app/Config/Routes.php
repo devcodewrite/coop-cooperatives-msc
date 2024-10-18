@@ -22,8 +22,8 @@ $routes->post('passbooks/sync-push', "PassbookController::push");
 $routes->get('accounts/sync-pull', "AccountController::pull");
 $routes->post('accounts/sync-push', "AccountController::push");
 
-$routes->resource('districts', ['only' => 'index,view', 'controller' => 'DistrictController']);
-$routes->resource('regions', ['only' => 'index,view', 'controller' => 'RegionController']);
+$routes->resource('districts', ['only' => 'index,show', 'controller' => 'DistrictController']);
+$routes->resource('regions', ['only' => 'index,show', 'controller' => 'RegionController']);
 $routes->resource('organizations', ['controller' => 'OrganizationController']);
 $routes->resource('offices', ['controller' => 'OfficeController']);
 $routes->resource('communities', ['controller' => 'CommunityController']);

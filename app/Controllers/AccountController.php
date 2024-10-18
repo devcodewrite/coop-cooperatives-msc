@@ -84,7 +84,7 @@ class AccountController extends ResourceController
 
     public function show($id = null)
     {
-        $params = $this->request->getVar(['columns', 'sort', 'page', 'pageSize']);
+        $params = $this->request->getVar(['columns']);
         $this->model->where('id',$id);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
