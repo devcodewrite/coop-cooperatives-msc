@@ -62,7 +62,7 @@ class CreateAccountsTable extends Migration
             'email' => [
                 'type' => 'VARCHAR',
                 'constraint' => '60',
-                'null' => false,
+                'null' => true,
             ],
             'marital_status' => [
                 'type' => 'ENUM',
@@ -77,12 +77,12 @@ class CreateAccountsTable extends Migration
             'nid_type' => [
                 'type' => 'ENUM',
                 'constraint' => ['passport', 'driver_license', 'voter_id', 'national_id_card'],
-                'null' => false,
+                'null' => true,
             ],
             'nid' => [
                 'type' => 'VARCHAR',
                 'constraint' => '20',
-                'null' => false,
+                'null' => true,
             ],
             'orgid' => [
                 'type' => 'VARCHAR',
