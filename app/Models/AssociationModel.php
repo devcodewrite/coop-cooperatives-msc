@@ -15,6 +15,7 @@ class AssociationModel extends Model
     protected $allowedFields    = [
         'name',
         'community_id',
+        'assoc_code',
         'orgid',
         'office_id',
         'creator',
