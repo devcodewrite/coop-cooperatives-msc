@@ -49,7 +49,7 @@ class Validation extends BaseConfig
         ],
         'districts' => [
             'name' => 'required|max_length[45]',
-            'region_id' => 'required|integer',
+            'region_id' => 'required|integer|is_not_unique[regions.id]',
         ],
         'organizations' => [
             'name' => 'required|max_length[40]',
@@ -57,22 +57,22 @@ class Validation extends BaseConfig
         ],
         'offices' => [
             'name' => 'required|max_length[40]',
-            'region_id' => 'required|integer',
-            'district_id' => 'required|integer',
+            'region_id' => 'required|integer|is_not_unique[regions.id]',
+            'district_id' => 'required|integer|is_not_unique[districts.id]',
             'owner' => 'required|min_length[3]',
             'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ],
         'communities' => [
             'name' => 'required|max_length[40]',
             'office_id' => 'required|integer|is_not_unique[offices.id]',
-            'region_id' => 'required|integer',
-            'district_id' => 'required|integer',
+            'region_id' => 'required|integer|is_not_unique[regions.id]',
+            'district_id' => 'required|integer|is_not_unique[districts.id]',
             'owner' => 'required|min_length[3]',
         ],
         'associations' => [
             'name' => 'required|max_length[45]',
-            'community_id' => 'required|integer',
-            'office_id' => 'required|integer|',
+            'community_id' => 'required|integer|is_not_unique[communities.id]',
+            'office_id' => 'required|integer|is_not_unique[offices.id]',
             'owner' => 'required|min_length[3]',
             'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ],
@@ -92,10 +92,11 @@ class Validation extends BaseConfig
             'nid' => 'permit_empty|max_length[20]',
             'owner' => 'required|min_length[3]',
             'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
+            'community_id' => 'required|integer|is_not_unique[communities.id]',
         ],
         'passbooks' => [
-            'account_id' => 'required|integer|is_not_unique[accounts.id,id,id]',
-            'association_id' => 'required|integer|is_not_unique[associations.id,id,id]',
+            'account_id' => 'required|integer|is_not_unique[accounts.id]',
+            'association_id' => 'required|integer|is_not_unique[associations.id]',
             'owner' => 'required|min_length[3]',
             'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ]
@@ -108,21 +109,21 @@ class Validation extends BaseConfig
         ],
         'districts' => [
             'name' => 'max_length[45]',
-            'region_id' => 'integer',
+            'region_id' => 'integer|is_not_unique[regions.id,id,id]',
         ],
         'organizations' => [
             'name' => 'max_length[40]'
         ],
         'offices' => [
             'name' => 'max_length[40]',
-            'region_id' => 'integer',
-            'district_id' => 'integer',
+            'region_id' => 'integer|is_not_unique[regions.id,id,id]',
+            'district_id' => 'integer|is_not_unique[districts.id,id,id]',
         ],
         'communities' => [
-            'name' => 'required|max_length[40]',
-            'office_id' => 'required|integer',
-            'region_id' => 'required|integer',
-            'district_id' => 'required|integer'
+            'name' => 'max_length[40]',
+            'office_id' => 'integer|is_not_unique[offices.id,id,id]',
+            'region_id' => 'integer|is_not_unique[regions.id,id,id]',
+            'district_id' => 'integer|is_not_unique[districts.id,id,id]'
         ],
         'accounts'  => [
             'title' => 'in_list[mr,mrs,miss,dr,prof]',
@@ -138,10 +139,12 @@ class Validation extends BaseConfig
             'education' => 'in_list[none,primary,secondary,tertiary,postgraduate,other]',
             'nid_type' => 'in_list[passport,driver_license,voter_id,national_id_card]',
             'nid' => 'max_length[60]',
+            'orgid' => 'max_length[10]|is_not_unique[organizations.orgid,orgid,orgid]',
+            'community_id' => 'integer|is_not_unique[communities.id,id,id]',
         ],
         'passbooks' => [
-            'account_id' => 'required|integer|is_not_unique[accounts.id,id,id]',
-            'association_id' => 'required|integer|is_not_unique[associations.id,id,id]',
+            'account_id' => 'integer|is_not_unique[accounts.id,id,id]',
+            'association_id' => 'integer|is_not_unique[associations.id,id,id]',
             'pbnum' => 'max_length[10]|is_not_unique[passbooks.pbnum,pbnum,pbnum]',
         ]
         // Other validation rules similar to 'create', with only required fields removed
