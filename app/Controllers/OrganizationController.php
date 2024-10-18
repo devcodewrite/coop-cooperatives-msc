@@ -2,13 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Models\OrganizationModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
 
 class OrganizationController extends ResourceController
 {
-    protected $modelName = 'App\Models\OrganizationModel';
+    protected $modelName = OrganizationModel::class;
     protected $format    = 'json';
     protected $allowedColumns = [];
 
