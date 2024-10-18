@@ -104,48 +104,48 @@ class Validation extends BaseConfig
 
     public $update = [
         'regions' => [
-            'name' => 'max_length[45]',
-            'short_name' => 'max_length[10]',
+            'name' => 'if_exist|max_length[45]',
+            'short_name' => 'if_exist|max_length[10]',
         ],
         'districts' => [
-            'name' => 'max_length[45]',
-            'region_id' => 'is_not_unique[regions.id,id,id]',
+            'name' => 'if_exist|max_length[45]',
+            'region_id' => 'if_exist|is_not_unique[regions.id,id,id]',
         ],
         'organizations' => [
-            'name' => 'max_length[40]'
+            'name' => 'if_exist|max_length[40]'
         ],
         'offices' => [
-            'name' => 'max_length[40]',
-            'region_id' => 'is_not_unique[regions.id,id,id]',
-            'district_id' => 'is_not_unique[districts.id,id,id]',
+            'name' => 'if_exist|max_length[40]',
+            'region_id' => 'if_exist|is_not_unique[regions.id,id,id]',
+            'district_id' => 'if_exist|is_not_unique[districts.id,id,id]',
         ],
         'communities' => [
-            'name' => 'max_length[40]',
-            'office_id' => 'is_not_unique[offices.id,id,id]',
-            'region_id' => 'is_not_unique[regions.id,id,id]',
-            'district_id' => 'is_not_unique[districts.id,id,id]'
+            'name' => 'if_exist|max_length[40]',
+            'office_id' => 'if_exist|is_not_unique[offices.id,id,id]',
+            'region_id' => 'if_exist|is_not_unique[regions.id,id,id]',
+            'district_id' => 'if_exist|is_not_unique[districts.id,id,id]'
         ],
         'accounts'  => [
-            'title' => 'in_list[mr,mrs,miss,dr,prof]',
-            'name' => 'max_length[60]',
-            'given_name' => 'max_length[45]',
-            'family_name' => 'max_length[45]',
-            'sex' => 'in_list[male,female,other]',
-            'dateofbirth' => 'valid_date',
-            'occupation' => 'permit_empty|max_length[60]',
-            'primary_phone' => 'max_length[60]',
-            'email' => 'valid_email|max_length[60]',
-            'marital_status' => 'in_list[single,married,divorced,widowed]',
-            'education' => 'in_list[none,primary,secondary,tertiary,postgraduate,other]',
-            'nid_type' => 'in_list[passport,driver_license,voter_id,national_id_card]',
-            'nid' => 'max_length[60]',
-            'orgid' => 'max_length[10]|is_not_unique[organizations.orgid,orgid,orgid]',
-            'community_id' => 'is_not_unique[communities.id,id,id]',
+            'title' => 'if_exist|in_list[mr,mrs,miss,dr,prof]',
+            'name' => 'if_exist|max_length[60]',
+            'given_name' => 'if_exist|max_length[45]',
+            'family_name' => 'if_exist|max_length[45]',
+            'sex' => 'if_exist|in_list[male,female,other]',
+            'dateofbirth' => 'if_exist|valid_date',
+            'occupation' => 'if_exist|permit_empty|max_length[60]',
+            'primary_phone' => 'if_exist|max_length[60]',
+            'email' => 'if_exist|valid_email|max_length[60]',
+            'marital_status' => 'if_exist|in_list[single,married,divorced,widowed]',
+            'education' => 'if_exist|in_list[none,primary,secondary,tertiary,postgraduate,other]',
+            'nid_type' => 'if_exist|in_list[passport,driver_license,voter_id,national_id_card]',
+            'nid' => 'if_exist|max_length[60]',
+            'orgid' => 'if_exist|max_length[10]|is_not_unique[organizations.orgid,orgid,orgid]',
+            'community_id' => 'if_exist|is_not_unique[communities.id,id,id]',
         ],
         'passbooks' => [
-            'account_id' => 'is_not_unique[accounts.id,id,id]',
-            'association_id' => 'is_not_unique[associations.id,id,id]',
-            'pbnum' => 'max_length[10]|is_not_unique[passbooks.pbnum,pbnum,pbnum]',
+            'account_id' => 'if_exist|is_not_unique[accounts.id,id,id]',
+            'association_id' => 'if_exist|is_not_unique[associations.id,id,id]',
+            'pbnum' => 'if_exist|max_length[10]|is_not_unique[passbooks.pbnum,pbnum,pbnum]',
         ]
         // Other validation rules similar to 'create', with only required fields removed
     ];
