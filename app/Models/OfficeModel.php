@@ -14,7 +14,6 @@ class OfficeModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
-        'orgid',
         'off_code',
         'region_id',
         'district_id',

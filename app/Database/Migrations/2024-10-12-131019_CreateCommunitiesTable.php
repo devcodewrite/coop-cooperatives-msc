@@ -35,10 +35,6 @@ class CreateCommunitiesTable extends Migration
                 'type' => 'INT',
                 'unsigned' => true,
             ],
-            'orgid' => [
-                'type' => 'VARCHAR',
-                'constraint' => '10',
-            ],
             'creator' => [
                 'type' => 'VARCHAR',
                 'constraint' => '40',
