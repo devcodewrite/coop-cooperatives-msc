@@ -60,7 +60,7 @@ class Validation extends BaseConfig
             'region_id' => 'required|integer',
             'district_id' => 'required|integer',
             'owner' => 'required|min_length[3]',
-            'orgid' => 'max_length[10]|is_not_unique[organizations.orgid]',
+            'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ],
         'communities' => [
             'name' => 'required|max_length[40]',
@@ -68,14 +68,14 @@ class Validation extends BaseConfig
             'region_id' => 'required|integer',
             'district_id' => 'required|integer',
             'owner' => 'required|min_length[3]',
-            'orgid' => 'max_length[10]|is_not_unique[organizations.orgid]',
+            'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ],
         'associations' => [
             'name' => 'required|max_length[45]',
             'community_id' => 'required|integer',
             'office_id' => 'required|integer|',
             'owner' => 'required|min_length[3]',
-            'orgid' => 'max_length[10]|is_not_unique[organizations.orgid]',
+            'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ],
         'accounts' => [
             'title' => 'required|in_list[mr,mrs,miss,dr,prof]',
@@ -92,13 +92,13 @@ class Validation extends BaseConfig
             'nid_type' => 'permit_empty|in_list[passport,driver_license,voter_id,national_id_card]',
             'nid' => 'permit_empty|max_length[20]',
             'owner' => 'required|min_length[3]',
-            'orgid' => 'max_length[10]|is_not_unique[organizations.orgid]',
+            'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ],
         'passbooks' => [
             'account_id' => 'required|integer|is_not_unique[accounts.id,id,id]',
             'association_id' => 'required|integer|is_not_unique[associations.id,id,id]',
             'owner' => 'required|min_length[3]',
-            'orgid' => 'max_length[10]|is_not_unique[organizations.orgid]',
+            'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
         ]
     ];
 
