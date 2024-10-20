@@ -33,7 +33,7 @@ class CustomRules
         $builder = $db->table($table)->where($field, $value);
 
         // Loop through the condition field/request field pairs
-        for ($i = 2; $i < count($params)-1; $i += 2) {
+        for ($i = 2; $i < count($params); $i += 2) {
             $conditionField = $params[$i];              // Database field name for the condition
             $requestField = $params[$i + 1];            // Request field name to pull the value from
 
