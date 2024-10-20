@@ -24,7 +24,6 @@ class CustomRules
             return false; // Invalid rule parameters
         }
 
-        print_r($params);die;
         // Extract table and field
         $table = $params[0];      // Table name
         $field = $params[1];      // Field to match the value against
