@@ -28,7 +28,7 @@ class AssociationController extends ResourceController
         $params = $this->request->getVar(['columns','filters', 'sort', 'page', 'pageSize']);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
-        return $response->getCollectionResponse(true, ['owner', 'orgid']);
+        return $response->getCollectionResponse(true, ['owner', 'orgid','community_id','office_id']);
     }
 
     public function create()
@@ -46,7 +46,7 @@ class AssociationController extends ResourceController
         $data['assoc_code'] = $data['assoc_code'] ?? $this->model->generateCode($data['orgid']);
         $data['creator'] = auth()->user_id();
 
-        $response = auth()->can('create', 'associations', ['owner', 'orgid'], [$data]);
+        $response = auth()->can('create', 'associations', ['owner', 'orgid', 'community_id','office_id'], [$data]);
         if ($response->denied())
             return $response->responsed();
 
@@ -75,7 +75,7 @@ class AssociationController extends ResourceController
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $response = auth()->can('update', 'associations', ['owner', 'orgid'], [$association]);
+        $response = auth()->can('update', 'associations', ['owner', 'orgid','community_id','office_id'], [$association]);
         if ($response->denied())
             return $response->responsed();
 
@@ -104,7 +104,7 @@ class AssociationController extends ResourceController
         $this->model->where('id',$id);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
-        return $response->getSingleResponse(true, ['owner', 'orgid']);
+        return $response->getSingleResponse(true, ['owner', 'orgid','community_id','office_id']);
     }
 
     public function delete($id = null)
@@ -116,7 +116,7 @@ class AssociationController extends ResourceController
                 'message' => 'Association not found'
             ], Response::HTTP_NOT_FOUND);
         }
-        $response = auth()->can('delete', 'associations', ['owner', 'orgid'], [$association]);
+        $response = auth()->can('delete', 'associations', ['owner', 'orgid','community_id','office_id'], [$association]);
         if ($response->denied())
             return $response->responsed();
 

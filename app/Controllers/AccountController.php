@@ -37,7 +37,7 @@ class AccountController extends ResourceController
     {
         $params = $this->request->getVar(['columns','filters', 'sort', 'page', 'pageSize']);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
-        return $response->getCollectionResponse(true, ['owner', 'orgid']);
+        return $response->getCollectionResponse(true, ['owner', 'orgid', 'community_id']);
     }
 
     public function create()
@@ -54,6 +54,10 @@ class AccountController extends ResourceController
         $data = $this->validator->getValidated();
         $data['acnum'] = $data['acnum'] ?? $this->model->generateCode($data['orgid']);
         $data['creator'] = auth()->user_id();
+
+        $response = auth()->can('create', 'passbooks', ['owner', 'orgid', 'community_id'], [$data]);
+        if ($response->denied())
+            return $response->responsed();
 
         if ($this->model->save($data)) {
             return $this->respondCreated([
@@ -79,7 +83,7 @@ class AccountController extends ResourceController
                 'message' => "Account doesn't exist.",
             ], Response::HTTP_NOT_FOUND);
         }
-        $response = auth()->can('update', 'accounts', ['owner', 'orgid'], [$account]);
+        $response = auth()->can('update', 'accounts', ['owner', 'orgid','community_id'], [$account]);
         if ($response->denied())
             return $response->responsed();
 
@@ -109,7 +113,7 @@ class AccountController extends ResourceController
         $this->model->where('id',$id);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
-        return $response->getSingleResponse(true, ['owner', 'orgid']);
+        return $response->getSingleResponse(true, ['owner', 'orgid','community_id']);
     }
 
     public function delete($id = null)
@@ -122,7 +126,7 @@ class AccountController extends ResourceController
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $response = auth()->can('delete', 'accounts', ['owner', 'orgid'], [$account]);
+        $response = auth()->can('delete', 'accounts', ['owner', 'orgid','community_id'], [$account]);
         if ($response->denied())
             return $response->responsed();
 
