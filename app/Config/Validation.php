@@ -73,10 +73,10 @@ class Validation extends BaseConfig
         ],
         'associations' => [
             'name' => 'required|max_length[45]',
-            'community_id' => 'required|exists_for_where[communities,id,owner,office_id,office_id]',
-            'office_id' => 'required|exists_for_where[offices,id,owner,orgid,orgid]',
+            'community_id' => 'required|exists_for_where[communities,id,owner,owner,office_id,office_id]',
+            'office_id' => 'required|exists_for_where[offices,id,owner,owner,orgid,orgid]',
             'owner' => 'required|min_length[12]',
-            'orgid' => 'required|max_length[10]|exists_for_where[organizations,id,owner]',
+            'orgid' => 'required|max_length[10]|exists_for_where[organizations,id,owner,owner]',
         ],
         'accounts' => [
             'title' => 'required|in_list[mr,mrs,miss,dr,prof]',
