@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\AssociationModel;
-use App\Models\OrganizationModel;
 use App\Models\PassbookModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
@@ -11,7 +9,7 @@ use Codewrite\CoopAuth\ApiResponse;
 
 class PassbookController extends ResourceController
 {
-    protected $modelName = 'App\Models\PassbookModel';
+    protected $modelName = PassbookModel::class;
     protected $format    = 'json';
     protected $allowedColumns = [
         'id',

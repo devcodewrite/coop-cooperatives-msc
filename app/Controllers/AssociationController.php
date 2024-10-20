@@ -2,13 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Models\AssociationModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
 
 class AssociationController extends ResourceController
 {
-    protected $modelName = 'App\Models\AssociationModel';
+    protected $modelName = AssociationModel::class;
     protected $format    = 'json';
     protected $allowedColumns = [
         'id',
