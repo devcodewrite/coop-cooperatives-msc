@@ -20,7 +20,7 @@ class CustomRules
         // Split the parameters passed to the rule
         $params = explode(',', $params);
 
-        if (count($params) < 3 || count($params) % 2 != 1) {
+        if (count($params) < 3 || count($params) % 2 != 0) {
             return false; // Invalid rule parameters
         }
 
