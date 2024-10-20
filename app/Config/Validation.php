@@ -73,7 +73,7 @@ class Validation extends BaseConfig
         ],
         'associations' => [
             'name' => 'required|max_length[45]',
-            'community_id' => 'required|is_not_unique[communities.id]|exists_for_where[communities,id,community_id]',
+            'community_id' => 'required|is_not_unique[communities.id]|exists_for_where[communities,owner,owner,office_id,office_id]',
             'office_id' => 'required|is_not_unique[offices.id]',
             'owner' => 'required|min_length[12]',
             'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
