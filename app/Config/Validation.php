@@ -75,8 +75,8 @@ class Validation extends BaseConfig
             'name' => 'required|max_length[45]',
             'community_id' => 'required|exists_for_where[communities,id,owner,owner,office_id,office_id]',
             'office_id' => 'required|exists_for_where[offices,id,owner,owner,orgid,orgid]',
-            'owner' => 'required|min_length[12]',
             'orgid' => 'required|max_length[10]|exists_for_where[organizations,orgid,owner,owner]',
+            'owner' => 'required|min_length[12]',
         ],
         'accounts' => [
             'title' => 'required|in_list[mr,mrs,miss,dr,prof]',
@@ -93,14 +93,14 @@ class Validation extends BaseConfig
             'nid_type' => 'permit_empty|in_list[passport,driver_license,voter_id,national_id_card]',
             'nid' => 'permit_empty|max_length[20]',
             'owner' => 'required|min_length[12]',
-            'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
-            'community_id' => 'required|integer|is_not_unique[communities.id]',
+            'office_id' => 'required|exists_for_where[offices,id,owner,owner,orgid,orgid]',
+            'orgid' => 'required|max_length[10]|exists_for_where[organizations,orgid,owner,owner]',
         ],
         'passbooks' => [
             'account_id' => 'required|integer|is_not_unique[accounts.id]',
-            'association_id' => 'required|integer|is_not_unique[associations.id]',
+            'association_id' => 'required|exists_for_where[associations,id,owner,owner]',
             'owner' => 'required|min_length[12]',
-            'orgid' => 'required|max_length[10]|is_not_unique[organizations.orgid]',
+            'orgid' => 'required|max_length[10]|exists_for_where[organizations,orgid,owner,owner]',
         ]
     ];
 
@@ -130,9 +130,7 @@ class Validation extends BaseConfig
         'associations' => [
             'name' => 'if_exist|max_length[45]',
             'community_id' => 'if_exist|is_not_unique[communities.id]',
-            'office_id' => 'if_exist|is_not_unique[offices.id]',
-            'owner' => 'if_exist|min_length[12]',
-            'orgid' => 'if_exist|max_length[10]|is_not_unique[organizations.orgid]',
+            'office_id' => 'if_exist|is_not_unique[offices.id]'
         ],
         'accounts'  => [
             'title' => 'if_exist|in_list[mr,mrs,miss,dr,prof]',
@@ -148,13 +146,12 @@ class Validation extends BaseConfig
             'education' => 'if_exist|in_list[none,primary,secondary,tertiary,postgraduate,other]',
             'nid_type' => 'if_exist|in_list[passport,driver_license,voter_id,national_id_card]',
             'nid' => 'if_exist|max_length[60]',
-            'orgid' => 'if_exist|max_length[10]|is_not_unique[organizations.orgid]',
-            'community_id' => 'if_exist|is_not_unique[communities.id]',
         ],
         'passbooks' => [
-            'account_id' => 'if_exist|is_not_unique[accounts.id]',
-            'association_id' => 'if_exist|is_not_unique[associations.id]',
-            'pbnum' => 'if_exist|max_length[10]|is_not_unique[passbooks.pbnum]',
+            'account_id' => 'if_exist|exists_for_where[accounts,id,owner,owner,orgid,orgid]',
+            'association_id' => 'if_exist|exists_for_where[associations,id,owner,owner,orgid,orgid]',
+            'owner' => 'required|min_length[12]',
+            'orgid' => 'required|max_length[10]|exists_for_where[organizations,orgid,owner,owner]',
         ]
         // Other validation rules similar to 'create', with only required fields removed
     ];
