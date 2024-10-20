@@ -76,7 +76,7 @@ class Validation extends BaseConfig
             'community_id' => 'required|exists_for_where[communities,id,owner,owner,office_id,office_id]',
             'office_id' => 'required|exists_for_where[offices,id,owner,owner,orgid,orgid]',
             'owner' => 'required|min_length[12]',
-            'orgid' => 'required|max_length[10]|exists_for_where[organizations,id,owner,owner]',
+            'orgid' => 'required|max_length[10]|exists_for_where[organizations,orgid,owner,owner]',
         ],
         'accounts' => [
             'title' => 'required|in_list[mr,mrs,miss,dr,prof]',
