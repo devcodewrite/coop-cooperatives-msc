@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\RegionModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
@@ -47,7 +46,7 @@ class RegionController extends ResourceController
         if ($this->model->save($data)) {
             return $this->respondCreated([
                 'status' => true,
-                'data' => $this->model->find($this->model->getInsertID()),
+                'data' => $this->model->select($this->allowedColumns)->find($this->model->getInsertID()),
                 'message' => 'Region created successfully.'
             ]);
         } else {
@@ -83,7 +82,7 @@ class RegionController extends ResourceController
         $this->model->update($id, $data);
         return $this->respond([
             'status' => true,
-            'data' => $this->model->find($id),
+            'data' => $this->model->select($this->allowedColumns)->find($id),
             'message' => 'Region updated successfully.'
         ]);
     }

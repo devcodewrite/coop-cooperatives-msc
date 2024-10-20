@@ -96,7 +96,7 @@ class PassbookController extends ResourceController
         $this->model->update($id, $data);
         return $this->respond([
             'status' => true,
-            'data' => $this->model->find($id),
+            'data' => $this->model->select($this->allowedColumns)->find($id),
             'message' => 'Passbook updated successfully.'
         ]);
     }

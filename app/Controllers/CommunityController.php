@@ -53,7 +53,7 @@ class CommunityController extends ResourceController
         if ($this->model->save($data)) {
             return $this->respondCreated([
                 'status' => true,
-                'data' => $this->model->find($this->model->getInsertID()),
+                'data' => $this->model->select($this->allowedColumns)->find($this->model->getInsertID()),
                 'message' => 'Community created successfully.'
             ]);
         } else {
@@ -92,7 +92,7 @@ class CommunityController extends ResourceController
         $this->model->update($id, $data);
         return $this->respond([
             'status' => true,
-            'data' => $this->model->find($id),
+            'data' => $this->model->select($this->allowedColumns)->find($id),
             'message' => 'Community updated successfully.'
         ]);
     }

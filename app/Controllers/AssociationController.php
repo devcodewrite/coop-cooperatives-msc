@@ -54,7 +54,7 @@ class AssociationController extends ResourceController
         if ($this->model->save($data)) {
             return $this->respondCreated([
                 'status' => true,
-                'data' => $this->model->find($this->model->getInsertID()),
+                'data' => $this->model->select($this->allowedColumns)->find($this->model->getInsertID()),
                 'message' => 'Association created successfully.'
             ]);
         } else {
@@ -94,7 +94,7 @@ class AssociationController extends ResourceController
         $this->model->update($id, $data);
         return $this->respond([
             'status' => true,
-            'data' => $this->model->find($id),
+            'data' => $this->model->select($this->allowedColumns)->find($id),
             'message' => 'Association updated successfully.'
         ]);
     }
