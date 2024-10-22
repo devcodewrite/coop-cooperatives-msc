@@ -11,12 +11,12 @@ class CreatePassbooksTable extends Migration
     {
         $this->forge->addField([
             'id' => [
-                'type' => 'INT',
+                'type' => 'BIGINT',
                 'auto_increment' => true,
                 'unsigned' => true,
             ],
             'account_id' => [
-                'type' => 'INT',
+                'type' => 'BIGINT',
                 'unsigned' => true,
             ],
             'association_id' => [
@@ -72,7 +72,8 @@ class CreatePassbooksTable extends Migration
         $this->forge->createTable('passbooks');
         $this->forge->addForeignKey('account_id', 'accounts', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('association_id', 'associations', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addKey(['creator', 'owner', 'orgid', 'pbnum', 'assoc_code']);
+        $this->forge->addForeignKey('orgid', 'organizations', 'orgid', 'CASCADE', 'CASCADE');
+        $this->forge->addKey(['creator', 'owner', 'pbnum', 'assoc_code']);
     }
 
     public function down()

@@ -2,13 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Models\AccountModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
 
 class AccountController extends ResourceController
 {
-    protected $modelName = 'App\Models\AccountModel';
+    protected $modelName = AccountModel::class;
     protected $format    = 'json';
     protected $allowedColumns = [
         'id',

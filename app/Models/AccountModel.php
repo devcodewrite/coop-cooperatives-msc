@@ -43,7 +43,7 @@ class AccountModel extends Model
 
     // Dates
     protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
+    protected $dateFormat    = '';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
@@ -76,11 +76,11 @@ class AccountModel extends Model
     public function generateCode(string $orgId): string
     {
         $prefix = intval(preg_replace('/\D/', '', $orgId));
-        $code = $prefix . "000001";
+        $code = $prefix . "00000001";
         $last = $this->where('orgid', $orgId)->orderBy('id', 'desc')->first();
         if ($last) {
-            $code = intval(preg_replace('/\D/', '', substr($last->acnum, 3))) + 1;
-            $code = str_pad($code, 6, 0, STR_PAD_LEFT);
+            $code = intval(substr($last->acnum, -8)) + 1;
+            $code = str_pad($code, 8, '0', STR_PAD_LEFT);
             $code = $prefix . $code;
         }
         return $code;

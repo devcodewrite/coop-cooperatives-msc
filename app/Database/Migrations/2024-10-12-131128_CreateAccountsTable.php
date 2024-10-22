@@ -11,7 +11,7 @@ class CreateAccountsTable extends Migration
     {
         $this->forge->addField([
             'id' => [
-                'type' => 'INT',
+                'type' => 'BIGINT',
                 'auto_increment' => true,
                 'unsigned' => true,
             ],
@@ -116,7 +116,8 @@ class CreateAccountsTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->createTable('accounts');
-        $this->forge->addKey(['creator','owner','orgid','acnum']);
+        $this->forge->addForeignKey('orgid', 'organizations', 'orgid', 'CASCADE', 'CASCADE');
+        $this->forge->addKey(['creator','owner','acnum']);
     }
 
     public function down()
