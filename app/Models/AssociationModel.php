@@ -33,7 +33,7 @@ class AssociationModel extends Model
 
     // Dates
     protected $useTimestamps = true;
-    protected $dateFormat    = '';
+    protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
