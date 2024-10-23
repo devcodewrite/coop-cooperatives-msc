@@ -74,7 +74,7 @@ class Filters extends BaseFilters
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
-            'jwt' => ['except' => ['regions', 'districts']],
+            'jwt' => ['except' => ['*/sync-pull', '*/sync-push']],
         ],
         'after' => [
             // 'honeypot',
