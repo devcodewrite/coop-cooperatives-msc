@@ -14,8 +14,6 @@ class RegionController extends ResourceController
     protected $allowedColumns = [
         'id',
         'name',
-        'creator',
-        'owner',
         'deleted_at',
         'updated_at',
         'created_at'
@@ -128,8 +126,6 @@ class RegionController extends ResourceController
             ->select([
                 'id as server_id',
                 'name',
-                'creator',
-                'owner',
                 'deleted_at',
                 'updated_at',
                 'created_at'
