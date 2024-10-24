@@ -139,6 +139,18 @@ class OfficeController extends ResourceController
 
         // Fetch updated after the last pulled timestamp
         $records = $this->model
+            ->select([
+                'id as server_id',
+                'name',
+                'off_code',
+                'region_id',
+                'district_id',
+                'creator',
+                'owner',
+                "orgid",
+                'updated_at',
+                'created_at'
+            ])
             ->where('updated_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->findAll();
         $deletedRecords = $this->model->select(['id', 'deleted_at'])

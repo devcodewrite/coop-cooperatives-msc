@@ -36,7 +36,7 @@ class AccountController extends ResourceController
 
     public function index()
     {
-        $params = $this->request->getVar(['columns','filters', 'sort', 'page', 'pageSize']);
+        $params = $this->request->getVar(['columns', 'filters', 'sort', 'page', 'pageSize']);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
         return $response->getCollectionResponse(true, ['owner', 'orgid', 'community_id']);
     }
@@ -84,7 +84,7 @@ class AccountController extends ResourceController
                 'message' => "Account doesn't exist.",
             ], Response::HTTP_NOT_FOUND);
         }
-        $response = auth()->can('update', 'accounts', ['owner', 'orgid','community_id'], [$account]);
+        $response = auth()->can('update', 'accounts', ['owner', 'orgid', 'community_id'], [$account]);
         if ($response->denied())
             return $response->responsed();
 
@@ -111,10 +111,10 @@ class AccountController extends ResourceController
     public function show($id = null)
     {
         $params = $this->request->getVar(['columns']);
-        $this->model->where('id',$id);
+        $this->model->where('id', $id);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
 
-        return $response->getSingleResponse(true, ['owner', 'orgid','community_id']);
+        return $response->getSingleResponse(true, ['owner', 'orgid', 'community_id']);
     }
 
     public function delete($id = null)
@@ -127,7 +127,7 @@ class AccountController extends ResourceController
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $response = auth()->can('delete', 'accounts', ['owner', 'orgid','community_id'], [$account]);
+        $response = auth()->can('delete', 'accounts', ['owner', 'orgid', 'community_id'], [$account]);
         if ($response->denied())
             return $response->responsed();
 
@@ -149,12 +149,36 @@ class AccountController extends ResourceController
     public function pull()
     {
         $lastSyncTime = $this->request->getGet('lastSyncTime');
-
+        $filter = $this->request->getGet(['filters']);
         // Fetch updated after the last pulled timestamp
         $records = $this->model
+            ->select([
+                'id as server_id',
+                'acnum',
+                'title',
+                'name',
+                'given_name',
+                'family_name',
+                'sex',
+                'dateofbirth',
+                'occupation',
+                'primary_phone',
+                'email',
+                'marital_status',
+                'education',
+                'nid_type',
+                'nid',
+                'orgid',
+                'creator',
+                'owner',
+                'updated_at',
+                'created_at'
+            ])
+            ->where($filter)
             ->where('updated_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->findAll();
         $deletedRecords = $this->model->select(['id', 'deleted_at'])
+            ->where($filter)
             ->where('deleted_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->onlyDeleted()->findAll();
 
