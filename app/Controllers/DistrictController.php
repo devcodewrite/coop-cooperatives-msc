@@ -15,6 +15,8 @@ class DistrictController extends ResourceController
         'id',
         'name',
         'region_id',
+        'category',
+        'capital',
         'updated_at',
         'created_at'
     ];
@@ -127,6 +129,8 @@ class DistrictController extends ResourceController
                 'id as server_id',
                 'name',
                 'region_id',
+                'category',
+                'capital',
                 'updated_at',
                 'created_at'
             ])
