@@ -177,7 +177,7 @@ class AccountController extends ResourceController
             ->where($filter)
             ->where('updated_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->findAll();
-        $deletedRecords = $this->model->select(['id', 'deleted_at'])
+        $deletedRecords = $this->model->select(['id as server_id', 'deleted_at'])
             ->where($filter)
             ->where('deleted_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->onlyDeleted()->findAll();

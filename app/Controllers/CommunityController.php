@@ -45,7 +45,7 @@ class CommunityController extends ResourceController
         $data = $this->validator->getValidated();
         $data['com_code'] = $data['com_code'] ?? $this->model->generateCode($data['owner']);
         $data['creator'] = auth()->user_id();
-        
+
         $response = auth()->can('create', 'communities', ['owner'], [$data]);
         if ($response->denied())
             return $response->responsed();
@@ -100,7 +100,7 @@ class CommunityController extends ResourceController
     public function show($id = null)
     {
         $params = $this->request->getVar(['columns']);
-        $this->model->where('id',$id);
+        $this->model->where('id', $id);
         $response = new ApiResponse($this->model, $params, $this->allowedColumns);
         return $response->getSingleResponse(true, ['owner', 'orgid']);
     }
@@ -140,9 +140,21 @@ class CommunityController extends ResourceController
 
         // Fetch updated after the last pulled timestamp
         $records = $this->model
+            ->select([
+                'id as server_id',
+                'name',
+                'com_code',
+                'office_id',
+                "region_id",
+                "district_id",
+                'creator',
+                'owner',
+                'updated_at',
+                'created_at'
+            ])
             ->where('updated_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->findAll();
-        $deletedRecords = $this->model->select(['id', 'deleted_at'])
+        $deletedRecords = $this->model->select(['id as server_id', 'deleted_at'])
             ->where('deleted_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->onlyDeleted()->findAll();
 

@@ -14,7 +14,6 @@ class RegionController extends ResourceController
     protected $allowedColumns = [
         'id',
         'name',
-        'orgid',
         'creator',
         'owner',
         'deleted_at',
@@ -126,9 +125,18 @@ class RegionController extends ResourceController
 
         // Fetch updated after the last pulled timestamp
         $records = $this->model
+            ->select([
+                'id as server_id',
+                'name',
+                'creator',
+                'owner',
+                'deleted_at',
+                'updated_at',
+                'created_at'
+            ])
             ->where('updated_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->findAll();
-        $deletedRecords = $this->model->select(['id', 'deleted_at'])
+        $deletedRecords = $this->model->select(['id as server_id', 'deleted_at'])
             ->where('deleted_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->onlyDeleted()->findAll();
 

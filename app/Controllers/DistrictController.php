@@ -15,7 +15,6 @@ class DistrictController extends ResourceController
         'id',
         'name',
         'region_id',
-        'orgid',
         'creator',
         'owner',
         'updated_at',
@@ -126,9 +125,18 @@ class DistrictController extends ResourceController
 
         // Fetch updated after the last pulled timestamp
         $records = $this->model
+            ->select([
+                'id as server_id',
+                'name',
+                'region_id',
+                'creator',
+                'owner',
+                'updated_at',
+                'created_at'
+            ])
             ->where('updated_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->findAll();
-        $deletedRecords = $this->model->select(['id', 'deleted_at'])
+        $deletedRecords = $this->model->select(['id as server_id', 'deleted_at'])
             ->where('deleted_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->onlyDeleted()->findAll();
 
