@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\OfficeModel;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
@@ -9,7 +11,7 @@ use Config\Database;
 
 class OfficeController extends ResourceController
 {
-    protected $modelName = 'App\Models\OfficeModel';
+    protected $modelName = OfficeModel::class;
     protected $format    = 'json';
     protected $allowedColumns = [
         'id',
@@ -172,28 +174,36 @@ class OfficeController extends ResourceController
         $deleted = $this->request->getJsonVar('deleted', true);
 
         $db = Database::connect();
-        $db->transStart();
-        foreach ($updates as $update) {
-            if ($update['server_id']) {
-                unset($update['id']);
-                $update['off_code'] = $this->model->generateCode($update['orgid']);
-            } else {
-                $update['id'] = $update['server_id'];
+        try {
+            $this->db->transException(true)->transStart();
+            foreach ($updates as $update) {
+                if ($update['server_id']) {
+                    unset($update['id']);
+                    $update['off_code'] = $this->model->generateCode($update['orgid']);
+                } else {
+                    $update['id'] = $update['server_id'];
+                }
+                $this->model->save($update);
             }
-            $this->model->save($update);
-        }
-        foreach ($deleted as $update) {
-            $this->model->delete($update['server_id']);
-        }
+            foreach ($deleted as $update) {
+                $this->model->delete($update['server_id']);
+            }
 
-        if ($db->transComplete())
+            if ($db->transComplete())
+                return $this->respond([
+                    'status' => true,
+                    'message' => 'Sync completed successfully'
+                ], Response::HTTP_OK);
+            else
+                return $this->respond([
+                    'status' => false,
+                    'message' => 'Sync failed'
+                ], Response::HTTP_OK);
+        } catch (DatabaseException $e) {
             return $this->respond([
-                'status' => true,
-                'message' => 'Sync completed successfully'
+                'status' => false,
+                'message' => $e->getMessage()
             ], Response::HTTP_OK);
-        else return $this->respond([
-            'status' => false,
-            'message' => 'Sync failed'
-        ], Response::HTTP_OK);
+        }
     }
 }
