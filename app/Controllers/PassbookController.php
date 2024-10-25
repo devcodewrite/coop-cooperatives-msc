@@ -174,16 +174,6 @@ class PassbookController extends ResourceController
     // Push changes to the server
     public function push()
     {
-        $rules = config('Validation')->sync;
-        // Validate input
-        if (!$this->validate($rules)) {
-            return $this->respond([
-                'status'  => false,
-                'message' => 'Failed validating data',
-                'error'   => $this->validator->getErrors()
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
         $updates = $this->request->getVar('updated');
         $nrowsUpdated = sizeof($updates);
         $deleted = $this->request->getVar('deleted');

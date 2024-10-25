@@ -6,6 +6,7 @@ use App\Models\AssociationModel;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
+use Config\Database;
 
 class AssociationController extends ResourceController
 {
@@ -170,29 +171,32 @@ class AssociationController extends ResourceController
     // Push changes to the server
     public function push()
     {
-        $rules = config('Validation')->sync;
-        // Validate input
-        if (!$this->validate($rules)) {
-            return $this->respond([
-                'status'  => false,
-                'message' => 'Failed validating data',
-                'error'   => $this->validator->getErrors()
-            ], Response::HTTP_BAD_REQUEST);
+        $updates = $this->request->getVar('updated');
+        $deleted = $this->request->getVar('deleted');
+
+        $db = Database::connect();
+        $db->transStart();
+        foreach ($updates as $update) {
+            unset($update['id']);
+            if (empty($update['server_id'])) {
+                $update['assoc_code'] = $this->model->generateCode($update['orgid']);
+            } else {
+                $update['id'] = $update['server_id'];
+            }
+            $this->model->save($update);
+        }
+        foreach ($deleted as $update) {
+            $this->model->delete($update['server_id']);
         }
 
-        $updates = $this->request->getVar('updated');
-        $nrowsUpdated = sizeof($updates);
-        $deleted = $this->request->getVar('deleted');
-        $nrowsDeleted = sizeof($updates);
-
-        if ($nrowsUpdated > 0)
-            $this->model->builder()->updateBatch($updates, ['id'], sizeof($updates));
-        if ($nrowsDeleted > 0)
-            $this->model->builder()->updateBatch($deleted, ['id'], sizeof($deleted));
-
-        return $this->respond([
-            'status' => true,
-            'message' => 'Sync completed successfully'
+        if ($db->transComplete())
+            return $this->respond([
+                'status' => true,
+                'message' => 'Sync completed successfully'
+            ], Response::HTTP_OK);
+        else return $this->respond([
+            'status' => false,
+            'message' => 'Sync failed'
         ], Response::HTTP_OK);
     }
 }
