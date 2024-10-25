@@ -193,8 +193,8 @@ class AccountController extends ResourceController
     // Push changes to the server
     public function push()
     {
-        $updates = $this->request->getVar('updated');
-        $deleted = $this->request->getVar('deleted');
+         $updates = $this->request->getJsonVar('updated', true);
+         $deleted = $this->request->getJsonVar('deleted', true);
 
         $db = Database::connect();
         $db->transStart();

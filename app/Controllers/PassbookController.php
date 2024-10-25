@@ -174,9 +174,9 @@ class PassbookController extends ResourceController
     // Push changes to the server
     public function push()
     {
-        $updates = $this->request->getVar('updated');
+         $updates = $this->request->getJsonVar('updated', true);
         $nrowsUpdated = sizeof($updates);
-        $deleted = $this->request->getVar('deleted');
+         $deleted = $this->request->getJsonVar('deleted', true);
         $nrowsDeleted = sizeof($updates);
 
         if ($nrowsUpdated > 0)
