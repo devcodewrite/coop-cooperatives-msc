@@ -177,7 +177,7 @@ class CommunityController extends ResourceController
         foreach ($updates as $update) {
             unset($update['id']);
             if (empty($update['server_id'])) {
-                $update['com_code'] = $this->model->generateCode($update['orgid']);
+                $update['com_code'] = $this->model->generateCode($update['owner']);
             } else {
                 $update['id'] = $update['server_id'];
             }
