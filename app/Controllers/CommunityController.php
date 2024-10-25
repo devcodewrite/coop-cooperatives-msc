@@ -189,6 +189,7 @@ class CommunityController extends ResourceController
 
         if ($db->transComplete())
             return $this->respond([
+                'timestamp' =>  date('Y-m-d H:i:s', strtotime('now')), // Current server time for synchronization
                 'status' => true,
                 'message' => 'Sync completed successfully'
             ], Response::HTTP_OK);

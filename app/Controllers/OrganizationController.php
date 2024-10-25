@@ -120,6 +120,7 @@ class OrganizationController extends ResourceController
 
         if ($this->model->delete($id)) {
             return $this->respondDeleted([
+                'timestamp' =>  date('Y-m-d H:i:s', strtotime('now')), // Current server time for synchronization
                 'status'  => true,
                 'message' => 'Organization delete successfully',
                 'data'    => null

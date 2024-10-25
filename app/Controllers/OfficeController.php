@@ -191,6 +191,7 @@ class OfficeController extends ResourceController
 
             if ($db->transComplete())
                 return $this->respond([
+                    'timestamp' =>  date('Y-m-d H:i:s', strtotime('now')), // Current server time for synchronization
                     'status' => true,
                     'message' => 'Sync completed successfully'
                 ], Response::HTTP_OK);
@@ -201,6 +202,7 @@ class OfficeController extends ResourceController
                 ], Response::HTTP_OK);
         } catch (DatabaseException $e) {
             return $this->respond([
+                'timestamp' =>  date('Y-m-d H:i:s', strtotime('now')), // Current server time for synchronization
                 'status' => false,
                 'message' => $e->getMessage()
             ], Response::HTTP_OK);
