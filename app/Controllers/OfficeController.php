@@ -168,8 +168,8 @@ class OfficeController extends ResourceController
     // Push changes to the server
     public function push()
     {
-        $updates = $this->request->getJsonVar('updated', true);
-        $deleted = $this->request->getJsonVar('deleted', true);
+        $updates = $this->request->getPost('updated');
+        $deleted = $this->request->getPost('deleted');
 
         $db = Database::connect();
         $db->transStart();
