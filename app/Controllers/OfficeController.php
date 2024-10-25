@@ -175,7 +175,7 @@ class OfficeController extends ResourceController
 
         $db = Database::connect();
         try {
-            $this->db->transException(true)->transStart();
+            $db->transException(true)->transStart();
             foreach ($updates as $update) {
                 if ($update['server_id']) {
                     unset($update['id']);
