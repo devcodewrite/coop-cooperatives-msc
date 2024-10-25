@@ -177,7 +177,7 @@ class OfficeController extends ResourceController
         try {
             $db->transException(true)->transStart();
             foreach ($updates as $update) {
-                if ($update['server_id']) {
+                if (!$update['server_id']) {
                     unset($update['id']);
                     $update['off_code'] = $this->model->generateCode($update['orgid']);
                 } else {
