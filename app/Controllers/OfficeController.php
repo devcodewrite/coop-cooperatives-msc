@@ -170,12 +170,12 @@ class OfficeController extends ResourceController
     {
         $updates = $this->request->getJsonVar('updated', true);
         $deleted = $this->request->getJsonVar('deleted', true);
-        
+
         $db = Database::connect();
         $db->transStart();
         foreach ($updates as $update) {
-            unset($update['id']);
-            if (empty($update['server_id'])) {
+            if ($update['server_id']) {
+                unset($update['id']);
                 $update['off_code'] = $this->model->generateCode($update['orgid']);
             } else {
                 $update['id'] = $update['server_id'];
