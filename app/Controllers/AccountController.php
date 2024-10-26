@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\AccountModel;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\Response;
 use CodeIgniter\RESTful\ResourceController;
 use Codewrite\CoopAuth\ApiResponse;
@@ -206,29 +207,38 @@ class AccountController extends ResourceController
         $deleted = $this->request->getJsonVar('deleted', true);
 
         $db = Database::connect();
-        $db->transStart();
-        foreach ($updates as $update) {
-            unset($update['id']);
-            if (empty($update['server_id'])) {
-                $update['acnum'] = $this->model->generateCode($update['orgid']);
-            } else {
-                $update['id'] = $update['server_id'];
+        try {
+            $db->transException(true)->transStart();
+            foreach ($updates as $update) {
+                unset($update['id']);
+                if (empty($update['server_id'])) {
+                    $update['acnum'] = $this->model->generateCode($update['orgid']);
+                } else {
+                    $update['id'] = $update['server_id'];
+                }
+                $this->model->save($update);
             }
-            $this->model->save($update);
-        }
-        foreach ($deleted as $update) {
-            $this->model->delete($update['server_id']);
-        }
+            foreach ($deleted as $update) {
+                $this->model->delete($update['server_id']);
+            }
 
-        if ($db->transComplete())
+            if ($db->transComplete())
+                return $this->respond([
+                    'timestamp' =>  date('Y-m-d H:i:s', strtotime('now')), // Current server time for synchronization
+                    'status' => true,
+                    'message' => 'Sync completed successfully'
+                ], Response::HTTP_OK);
+            else return $this->respond([
+                'status' => false,
+                'message' => 'Sync failed'
+            ], Response::HTTP_OK);
+            
+        } catch (DatabaseException $e) {
             return $this->respond([
                 'timestamp' =>  date('Y-m-d H:i:s', strtotime('now')), // Current server time for synchronization
-                'status' => true,
-                'message' => 'Sync completed successfully'
+                'status' => false,
+                'message' => $e->getMessage()
             ], Response::HTTP_OK);
-        else return $this->respond([
-            'status' => false,
-            'message' => 'Sync failed'
-        ], Response::HTTP_OK);
+        }
     }
 }
