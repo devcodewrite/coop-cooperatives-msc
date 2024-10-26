@@ -159,7 +159,7 @@ class AccountController extends ResourceController
             ], Response::HTTP_BAD_REQUEST);
         }
         $lastSyncTime = $this->request->getGet('lastSyncTime');
-        $filter = $this->request->getGet(['filters']);
+        $filter = $this->request->getGet('filters');
         // Fetch updated after the last pulled timestamp
         $records = $this->model
             ->select([
