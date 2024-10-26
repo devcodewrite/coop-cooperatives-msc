@@ -149,6 +149,15 @@ class AccountController extends ResourceController
     // Pull changes from the server
     public function pull()
     {
+        $rules = config('Validation')->sync['filters'];
+        // Validate input
+        if (!$this->validate($rules)) {
+            return $this->respond([
+                'status'  => false,
+                'message' => 'Failed validating data',
+                'error'   => $this->validator->getErrors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
         $lastSyncTime = $this->request->getGet('lastSyncTime');
         $filter = $this->request->getGet(['filters']);
         // Fetch updated after the last pulled timestamp
@@ -175,11 +184,11 @@ class AccountController extends ResourceController
                 'updated_at',
                 'created_at'
             ])
-            ->where($filter)
+            ->where($filter ?? [])
             ->where('updated_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->findAll();
         $deletedRecords = $this->model->select(['id as server_id', 'deleted_at'])
-            ->where($filter)
+            ->where($filter ?? [])
             ->where('deleted_at >', date('Y-m-d H:i:s', strtotime($lastSyncTime)))
             ->onlyDeleted()->findAll();
 
@@ -193,8 +202,8 @@ class AccountController extends ResourceController
     // Push changes to the server
     public function push()
     {
-         $updates = $this->request->getJsonVar('updated', true);
-         $deleted = $this->request->getJsonVar('deleted', true);
+        $updates = $this->request->getJsonVar('updated', true);
+        $deleted = $this->request->getJsonVar('deleted', true);
 
         $db = Database::connect();
         $db->transStart();
