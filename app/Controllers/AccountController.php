@@ -149,7 +149,7 @@ class AccountController extends ResourceController
     // Pull changes from the server
     public function pull()
     {
-        $rules = config('Validation')->sync['filters'];
+        $rules = config('Validation')->sync;
         // Validate input
         if (!$this->validate($rules)) {
             return $this->respond([
