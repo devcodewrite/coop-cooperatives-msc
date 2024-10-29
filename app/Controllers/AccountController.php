@@ -213,6 +213,7 @@ class AccountController extends ResourceController
                 unset($update['id']);
                 if (empty($update['server_id'])) {
                     $update['acnum'] = $this->model->generateCode($update['orgid']);
+                    $update['photo'] = $this->model->savePhoto($update['photo']);
                 } else {
                     $update['id'] = $update['server_id'];
                 }

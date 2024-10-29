@@ -27,6 +27,7 @@ class AccountModel extends Model
         'education',
         'nid_type',
         'nid',
+        'photo',
         'orgid',
         'creator',
         'owner',
@@ -84,5 +85,12 @@ class AccountModel extends Model
             $code = $prefix . $code;
         }
         return $code;
+    }
+
+    public function savePhoto($base64 = null): string| null
+    {
+        $hashId = null;
+        //Send image to storage service
+        return $hashId;
     }
 }
