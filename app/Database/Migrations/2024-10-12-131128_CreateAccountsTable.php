@@ -47,7 +47,7 @@ class CreateAccountsTable extends Migration
             ],
             'dateofbirth' => [
                 'type' => 'DATE',
-                'null' => false,
+                'null' => true,
             ],
             'occupation' => [
                 'type' => 'VARCHAR',
@@ -84,6 +84,14 @@ class CreateAccountsTable extends Migration
                 'constraint' => '20',
                 'null' => true,
             ],
+            'photo' => [
+                'type' => 'TINYTEXT',
+                'null' => true,
+            ],
+            'community_id' => [
+                'type' => 'INT',
+                'unsigned' => true,
+            ],
             'orgid' => [
                 'type' => 'VARCHAR',
                 'constraint' => '10',
@@ -116,6 +124,7 @@ class CreateAccountsTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->createTable('accounts');
+        $this->forge->addForeignKey('community_id', 'communities', 'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('orgid', 'organizations', 'orgid', 'CASCADE', 'CASCADE');
         $this->forge->addKey(['creator','owner','acnum']);
     }
